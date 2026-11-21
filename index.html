@@ -1,306 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Self Declaration</title>
+<title>Self Declaration – Save as PDF & Signature Upload</title>
+
+<!-- Handwriting Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+
+<!-- PDF Generation Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
-:root{--g:#0b4a2b;--g2:#146c3f;--gl:#eaf4ee;--line:#c9d8cf;--ink:#16221b;--err:#b3261e}
+:root{
+  --bg:#eef2f9; --card:#fff; --ink:#16202f; --muted:#66758c;
+  --line:#dbe2ec; --accent:#0b6bcb; --soft:#eef5ff;
+}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:#fff;color:var(--ink);font:16px/1.5 "Segoe UI",Roboto,Arial,sans-serif}
-header{background:var(--g);color:#fff;border-bottom:4px solid #7fc79b;padding:24px 16px 20px;text-align:center}
-header h1{margin:0;font-size:clamp(1.5rem,5vw,2.2rem);letter-spacing:.05em;text-align:center}
-header p{margin:8px auto 0;max-width:620px;font-size:1rem;color:#cfe6d8;text-align:center}
-main{display:grid;grid-template-columns:minmax(320px,430px) 1fr;gap:24px;max-width:1320px;margin:0 auto;padding:20px}
-fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 18px;padding:14px 16px 6px;background:#fff}
-legend{background:var(--g);color:#fff;font-weight:600;font-size:.95rem;padding:3px 12px;border-radius:4px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
-.fld{margin-bottom:12px;min-width:0}.full{grid-column:1/-1}
-label{display:block;font-size:.85rem;font-weight:600;margin-bottom:3px;color:#26402f}
-input,select{width:100%;padding:9px 10px;border:1px solid #9db5a6;border-radius:4px;font:inherit;background:#fff;color:var(--ink)}
-input:focus,select:focus,button:focus-visible{outline:3px solid #7fc79b;outline-offset:1px;border-color:var(--g2)}
-.hint{font-size:.76rem;color:#52665a;margin-top:2px}
-.err{font-size:.78rem;color:var(--err);min-height:0;margin-top:2px}
-.bad{border-color:var(--err)!important}
-.inr{position:relative}.inr span{position:absolute;left:10px;top:9px;color:#345}.inr input{padding-left:26px}
-.total{display:flex;justify-content:space-between;align-items:center;background:var(--gl);border:1px solid var(--line);border-radius:4px;padding:10px 12px;font-weight:700;margin-bottom:12px;color:var(--g)}
-.actions{display:flex;flex-wrap:wrap;gap:10px}
-button{font:inherit;font-weight:600;padding:10px 16px;border-radius:5px;border:1px solid var(--g);cursor:pointer;background:var(--g);color:#fff}
-button:hover{background:var(--g2)}
-button.alt{background:#fff;color:var(--g)}button.alt:hover{background:var(--gl)}
-button.ghost{background:#fff;color:#8a2a22;border-color:#c9a29e}button.ghost:hover{background:#fbeeed}
-.mini{padding:4px 10px;font-size:.78rem;margin-top:6px}
-.preview-col{position:sticky;top:10px;align-self:start;min-width:0}
-.preview-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
-.preview-head h2{margin:0;font-size:1.05rem;color:var(--g)}
-#scaleWrap{width:100%;overflow:hidden;background:#dfe7e2;border:1px solid var(--line);border-radius:6px}
-#sheet{width:210mm;height:297mm;background:#fff;padding:18mm 20mm;transform-origin:top left;box-shadow:0 1px 6px rgba(0,0,0,.25);
- font-family:"Times New Roman",Times,"Liberation Serif",serif;font-size:12pt;line-height:1.95;color:#000;overflow:hidden}
-.d-title{text-align:center;font-size:17pt;font-weight:bold;text-decoration:underline;margin:0 0 10mm;letter-spacing:.06em}
-#sheet p{margin:0 0 4mm;text-align:justify}
-#sheet .f{text-decoration:underline;text-underline-offset:3px;white-space:pre-wrap}
-#sheet .pick{border:1px solid #000;border-radius:50%;padding:0 5px}
-#sheet table{width:100%;border-collapse:collapse;margin:2mm 0 6mm;line-height:1.5}
-#sheet th,#sheet td{border:1px solid #000;padding:2.4mm 3mm;font-size:12pt;vertical-align:middle}
-#sheet th{text-align:left}
-#sheet td.n{text-align:right;white-space:nowrap;width:42mm}#sheet td.c{text-align:center;width:16mm}
-#sheet .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14mm}
-#sheet .foot div:last-child{text-align:center}
-.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#16221b;color:#fff;padding:10px 16px;border-radius:6px;max-width:92vw;font-size:.9rem;z-index:9;display:none}
-@media (max-width:900px){main{grid-template-columns:1fr;padding:12px}.preview-col{position:static}}
-@media (max-width:420px){.row{grid-template-columns:1fr}}
-.progress{position:sticky;top:0;z-index:5;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-bottom:16px;font-size:.85rem;color:#26402f}
-.pbar{height:8px;background:#e1ebe5;border-radius:4px;overflow:hidden;margin-bottom:5px}
-.pbar i{display:block;height:100%;width:0;background:var(--g2);transition:width .25s}
-.progress.done{background:var(--gl);font-weight:600;color:var(--g)}
-.mbar{display:none}
-@media (max-width:900px){
- .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;gap:10px;padding:10px;background:#fff;border-top:1px solid var(--line);z-index:8}
- .mbar button{flex:1}
- body{padding-bottom:72px}
- .toast{bottom:84px}
+html,body{margin:0}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,"Noto Sans",Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.45;
+  padding:14px; -webkit-text-size-adjust:100%;
 }
-@page{size:A4 portrait;margin:0}
-@media print{
- html,body{background:#fff;margin:0;padding:0}
- header,.panel,.preview-head,.toast,.mbar{display:none!important}
- main{display:block;padding:0;margin:0;max-width:none}
- .preview-col{position:static}
- #scaleWrap{width:210mm!important;height:296mm!important;border:0;border-radius:0;background:#fff;overflow:hidden}
- #sheet{transform:none!important;box-shadow:none;height:296mm;page-break-after:avoid;break-after:avoid}
- *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.hidden{display:none!important}
+
+/* Layout */
+.app{max-width:1500px; margin:0 auto}
+.app-title{text-align:center; margin:0 0 14px}
+.app-title h1{margin:0 0 4px; font-size:1.2rem; letter-spacing:.4px}
+.app-title p{margin:0; font-size:.8rem; color:var(--muted)}
+.layout{
+  display:grid; gap:18px;
+  grid-template-columns:minmax(0,1fr) minmax(340px,560px);
+  align-items:start;
 }
+@media(max-width:1000px){
+  .layout{grid-template-columns:1fr}
+  .preview-panel{position:static!important}
+}
+
+/* Form card */
+.form-card{
+  background:var(--card); border-radius:14px;
+  box-shadow:0 8px 30px rgba(16,32,60,.10); overflow:hidden;
+}
+.form-card form{padding:18px}
+section{margin-bottom:20px}
+section h2{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.9px;
+  color:var(--accent); margin:0 0 10px; padding-bottom:6px;
+  border-bottom:2px solid #e8f0fb;
+}
+.row{display:grid; gap:12px}
+.row + .row{margin-top:12px}
+@media(min-width:560px){ .row.two{grid-template-columns:1fr 1fr} }
+.field{display:flex; flex-direction:column; gap:5px; min-width:0}
+.field label{font-size:.74rem; font-weight:600; color:var(--muted); letter-spacing:.2px}
+input,select{
+  width:100%; padding:11px 12px; font-size:16px; font-family:inherit;
+  color:var(--ink); background:#fbfcfe; border:1px solid var(--line);
+  border-radius:9px; outline:none; transition:.15s;
+}
+select{
+  appearance:none; -webkit-appearance:none; padding-right:34px;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath fill='%2366758c' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+input:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(11,107,203,.14); background:#fff}
+input::placeholder{color:#a9b4c5}
+input[readonly]{background:var(--soft); font-weight:700}
+
+/* Income rows */
+.inc-row{
+  display:grid; grid-template-columns:1fr minmax(110px,140px);
+  gap:10px; align-items:center; padding:8px 0;
+  border-bottom:1px dashed var(--line);
+}
+.inc-row label{font-size:.85rem}
+.inc-row input{text-align:right}
+.inc-total{
+  display:grid; grid-template-columns:1fr minmax(110px,140px); gap:10px;
+  align-items:center; background:var(--soft); border-radius:10px;
+  padding:11px 12px; margin-top:10px; font-weight:700; font-size:.9rem;
+}
+.words{
+  margin-top:8px; font-size:.82rem; color:var(--accent);
+  background:#f3f8ff; border-left:3px solid var(--accent);
+  padding:8px 10px; border-radius:0 8px 8px 0;
+}
+.words:empty{display:none}
+
+/* Declaration text */
+.decl{
+  font-size:.86rem; color:#2b3446; background:#fafbfe;
+  border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+}
+.decl p{margin:0 0 8px}
+.decl p:last-child{margin:0}
+
+/* Signature upload */
+.sig-upload{
+  border:1px dashed var(--line); border-radius:10px;
+  padding:12px; background:#fbfcfe;
+}
+.file-label{
+  display:inline-block; background:#eef5ff; color:var(--accent);
+  font-weight:700; font-size:.85rem; padding:9px 12px;
+  border-radius:8px; cursor:pointer; border:1px solid #d5e6ff;
+}
+.file-input{display:none}
+.sig-preview-wrap{display:flex; align-items:center; gap:10px; margin-top:10px}
+.sig-preview-wrap img{
+  max-height:56px; max-width:160px; border:1px solid var(--line);
+  border-radius:6px; background:#fff; padding:4px;
+}
+.btn-remove{
+  background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;
+  border-radius:8px; padding:6px 10px; font-size:.78rem;
+  font-weight:700; cursor:pointer;
+}
+small.hint{display:block; color:var(--muted); font-size:.72rem; margin-top:6px}
+
+/* Buttons */
+.actions{display:flex; gap:10px; padding:14px 18px 20px; flex-wrap:wrap}
+button{
+  flex:1 1 140px; padding:13px 16px; font-size:.92rem; font-weight:700;
+  font-family:inherit; border-radius:10px; border:none; cursor:pointer;
+  transition:.15s;
+}
+.btn-primary{background:var(--accent); color:#fff; box-shadow:0 4px 14px rgba(11,107,203,.28)}
+.btn-primary:active{transform:translateY(1px)}
+.btn-primary:disabled{background:#7baedb; cursor:not-allowed}
+.btn-ghost{background:#f1f4fa; color:#46566e}
+.btn-ghost:active{background:#e4eaf4}
+
+/* Preview panel */
+.preview-panel{
+  position:sticky; top:16px;
+  background:var(--card); border-radius:14px;
+  box-shadow:0 8px 30px rgba(16,32,60,.10);
+  padding:12px;
+}
+.preview-head{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; margin-bottom:10px;
+}
+.preview-head h2{
+  margin:0; font-size:.82rem; letter-spacing:.5px;
+  color:var(--accent); text-transform:uppercase;
+}
+.a4-viewport{
+  position:relative; width:100%; overflow:hidden;
+  background:#f7f9fc; border:1px solid var(--line);
+  border-radius:10px; min-height:200px;
+}
+
+/* A4 Sheet */
+.a4-sheet{
+  position:absolute; top:0; left:0;
+  width:210mm; min-height:297mm;
+  padding:16mm 14mm;
+  background:#fff; color:#000;
+  font-family:"Times New Roman", Georgia, serif;
+  font-size:11.2pt; line-height:1.45;
+  transform-origin:top left;
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+  /* Background explicitly set for PDF */
+  background-color: #ffffff; 
+}
+.a4-head{text-align:center; margin-bottom:8mm}
+.a4-title{font-size:15pt; font-weight:bold; letter-spacing:1px}
+.a4-sheet p{margin:0 0 3mm; text-align:justify}
+
+/* Handwriting Typing Effect */
+.fill{
+  display:inline-block; min-width:18mm;
+  border-bottom:1px solid #000; padding:0 1.5mm;
+  line-height:1.2; vertical-align:bottom;
+  font-family: 'Caveat', cursive;
+  font-size: 14pt;
+  color: #1a237e; /* Blue Ink */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+#prevWordsFill{
+  min-width:60mm;
+  text-align: center;
+}
+
+.inc-table{
+  width:100%; border-collapse:collapse; font-size:10.5pt;
+  margin:3mm 0 4mm;
+}
+.inc-table th,.inc-table td{
+  border:1px solid #000; padding:2.2mm 2.5mm; vertical-align:top;
+}
+.inc-table th{background:#f2f2f2; font-weight:bold; text-align:left}
+.inc-table .num{
+  text-align:right; white-space:nowrap; width:34mm;
+  font-family: 'Caveat', cursive;
+  font-size: 14pt;
+  color: #1a237e;
+  font-weight: 600;
+}
+.inc-table tr.total td{font-weight:bold; background:#f7f7f7}
+
+.decl-block{margin-top:4mm}
+.decl-block p{margin-bottom:3mm; text-align:justify}
+.footer{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:10mm; margin-top:12mm;
+}
+.footer-left{font-size:10.5pt; line-height:1.8}
+.footer-right{text-align:center}
+.sig-img-wrap{
+  width:55mm; height:22mm; border-bottom:1px solid #000;
+  display:flex; align-items:flex-end; justify-content:center;
+  padding:1mm;
+}
+.sig-img-wrap img{max-width:100%; max-height:20mm; object-fit:contain; display:block}
+.sig-placeholder{font-size:8.5pt; color:#777; padding-bottom:1mm}
+.sig-caption{font-size:9.5pt; text-align:center; width:55mm; margin-top:1mm}
+
+/* Loading Overlay */
+.overlay {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(255,255,255,0.8); z-index: 9999;
+  display: flex; justify-content: center; align-items: center;
+  flex-direction: column; gap: 10px; font-weight: bold; color: #0b6bcb;
+}
+.spinner {
+  width: 40px; height: 40px; border: 4px solid #eef5ff;
+  border-top: 4px solid #0b6bcb; border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
 </style>
 </head>
 <body>
-<header>
- <h1>Self Declaration</h1>
- <p>Fill in the 4 simple steps. Your declaration updates live as you type. Then print it or save it as a PDF.</p>
-</header>
 
-<main>
-<form class="panel" id="form" novalidate autocomplete="off" onsubmit="return false">
- <div class="progress" aria-live="polite"><div class="pbar"><i id="pfill"></i></div><span id="ptext">0 of 15 required details filled</span></div>
- <fieldset>
-  <legend>Step 1: Personal information</legend>
-  <div class="row">
-   <div class="fld"><label for="hon">Smt / Sri / Kumari</label>
-    <select id="hon"><option>Smt</option><option>Sri</option><option>Kumari</option></select></div>
-   <div class="fld"><label for="name">Full name</label><input id="name" maxlength="60" placeholder="e.g. Ramesh Kumar Das"><div class="err" data-e="name"></div></div>
-   <div class="fld"><label for="rel">Son / Daughter / Wife</label>
-    <select id="rel"><option>Son</option><option>Daughter</option><option>Wife</option></select></div>
-   <div class="fld"><label for="relname">…of Shri (name)</label><input id="relname" maxlength="60" placeholder="e.g. Suresh Das"><div class="err" data-e="relname"></div></div>
-   <div class="fld"><label for="age">Age</label><input id="age" type="number" min="1" max="120" inputmode="numeric"><div class="err" data-e="age"></div></div>
-   <div class="fld"><label for="year">Year</label><input id="year" maxlength="12" placeholder="As per the form"><div class="hint">The form has a blank after “Age”.</div></div>
-   <div class="fld"><label for="caste">Caste</label>
-    <select id="caste"><option value="">Select</option><option>SC</option><option>ST</option><option>OBC</option><option>SEBC</option><option>General</option></select><div class="err" data-e="caste"></div></div>
-   <div class="fld"><label for="subcaste">Sub caste</label><input id="subcaste" maxlength="40"></div>
-   <div class="fld"><label for="village">Village</label><input id="village" maxlength="50" placeholder="e.g. Gopalpur"><div class="err" data-e="village"></div></div>
-   <div class="fld"><label for="po">PO (Post Office)</label><input id="po" maxlength="50" placeholder="e.g. Gopalpur"><div class="err" data-e="po"></div></div>
-   <div class="fld"><label for="ps">PS (Police Station)</label><input id="ps" maxlength="50" placeholder="e.g. Gopalpur"><div class="err" data-e="ps"></div></div>
-   <div class="fld"><label for="tahasil">Tahasil</label><input id="tahasil" maxlength="50" placeholder="e.g. Chhatrapur"><div class="err" data-e="tahasil"></div></div>
-   <div class="fld"><label for="district">District</label><input id="district" maxlength="50" placeholder="e.g. Ganjam"><div class="err" data-e="district"></div></div>
-   <div class="fld"><label for="state">State</label><input id="state" value="Odisha" maxlength="40"><div class="err" data-e="state"></div></div>
-   <div class="fld full"><label for="pin">PIN code</label><input id="pin" inputmode="numeric" maxlength="6" placeholder="6 digits"><div class="err" data-e="pin"></div></div>
+<div class="app">
+  <div class="app-title no-print">
+    <h1>SELF DECLARATION – Save as PDF</h1>
+    <p>Fill the form • Live A4 preview • Download PDF (100KB - 500KB)</p>
   </div>
- </fieldset>
 
- <fieldset>
-  <legend>Step 2: Annual family income</legend>
-  <div class="fld"><label for="fy">Financial year</label><input id="fy" maxlength="7" placeholder="e.g. 2025-26"><div class="err" data-e="fy"></div></div>
-  <div class="fld"><label for="i1">1. Agriculture Land / Farming / Horticulture</label><div class="inr"><span>₹</span><input class="inc" id="i1" type="number" min="0" step="0.01" inputmode="decimal"></div><div class="err" data-e="i1"></div></div>
-  <div class="fld"><label for="i2">2. Salary / Wages / Remuneration / Pension</label><div class="inr"><span>₹</span><input class="inc" id="i2" type="number" min="0" step="0.01" inputmode="decimal"></div><div class="err" data-e="i2"></div></div>
-  <div class="fld"><label for="i3">3. Business / Trade / Commerce / Profession</label><div class="inr"><span>₹</span><input class="inc" id="i3" type="number" min="0" step="0.01" inputmode="decimal"></div><div class="err" data-e="i3"></div></div>
-  <div class="fld"><label for="i4">4. Other Sources (Rent, Interest, etc.)</label><div class="inr"><span>₹</span><input class="inc" id="i4" type="number" min="0" step="0.01" inputmode="decimal"></div><div class="err" data-e="i4"></div></div>
-  <div class="total"><span>Total Annual Family Income</span><span id="totalShow">₹ 0</span></div>
-  <div class="fld"><label for="words">Total income in words</label><input id="words" maxlength="120" placeholder="Filled in automatically; you can edit it">
-   <div class="hint">The document adds “Rupees” before and “only” after this text.</div>
-   <button type="button" class="alt mini" id="autoWords">Fill in words automatically</button><div class="err" data-e="words"></div></div>
- </fieldset>
+  <div class="layout">
 
- <fieldset>
-  <legend>Step 3: Date and place</legend>
-  <div class="row">
-   <div class="fld"><label for="date">Date</label><input id="date" type="date"><button type="button" class="alt mini" id="today">Use today’s date</button><div class="err" data-e="date"></div></div>
-   <div class="fld"><label for="place">Place</label><input id="place" maxlength="50" placeholder="e.g. Brahmapur"><div class="err" data-e="place"></div></div>
+    <!-- ================= FORM ================= -->
+    <main class="form-card no-print">
+      <form id="f" autocomplete="on">
+
+        <section>
+          <h2>1. Personal Details</h2>
+          <div class="row two">
+            <div class="field">
+              <label>Prefix</label>
+              <select id="prefix">
+                <option>Smt</option><option>Sri</option><option>Kumari</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Full Name</label>
+              <input id="name" placeholder="Enter full name" required>
+            </div>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label>Relation</label>
+              <select id="relation">
+                <option>Son</option><option>Daughter</option><option>Wife</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Father / Husband's Name (Shri)</label>
+              <input id="guardian" placeholder="Father / Husband's name" required>
+            </div>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label>Age (Years)</label>
+              <input id="age" type="number" min="1" max="120" placeholder="e.g. 28" required>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>2. Caste Details</h2>
+          <div class="row two">
+            <div class="field">
+              <label>Caste Category</label>
+              <select id="category" required>
+                <option value="">-- Select --</option>
+                <option>SC</option><option>ST</option>
+                <option>OBC</option><option>SEBC</option><option>General</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Sub Caste</label>
+              <input id="subcaste" placeholder="Sub caste" required>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>3. Residence / Address</h2>
+          <div class="row two">
+            <div class="field">
+              <label>Village</label>
+              <input id="village" placeholder="Village name" required>
+            </div>
+            <div class="field">
+              <label>PO (Post Office)</label>
+              <input id="po" placeholder="Post office" required>
+            </div>
+          </div>
+          <div class="row two">
+            <div class="field">
+              <label>PS (Police Station)</label>
+              <input id="ps" placeholder="Police station" required>
+            </div>
+            <div class="field">
+              <label>Tahasil</label>
+              <input id="tahasil" placeholder="Tahasil / Block" required>
+            </div>
+          </div>
+          <div class="row two">
+            <div class="field">
+              <label>District</label>
+              <input id="district" placeholder="District" required>
+            </div>
+            <div class="field">
+              <label>State</label>
+              <input id="state" value="Odisha" required>
+            </div>
+          </div>
+          <div class="row two">
+            <div class="field">
+              <label>PIN Code</label>
+              <input id="pin" type="text" inputmode="numeric" pattern="[0-9]{6}"
+                     maxlength="6" placeholder="6 digit PIN" required>
+            </div>
+            <div class="field">
+              <label>Financial Year</label>
+              <input id="fy" placeholder="e.g. 2025-26" required>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>4. Annual Family Income</h2>
+
+          <div class="inc-row">
+            <label>Agriculture / Farming / Horticulture</label>
+            <input type="number" min="0" class="amt" id="i1" placeholder="0">
+          </div>
+          <div class="inc-row">
+            <label>Salary / Wages / Pension</label>
+            <input type="number" min="0" class="amt" id="i2" placeholder="0">
+          </div>
+          <div class="inc-row">
+            <label>Business / Trade / Profession</label>
+            <input type="number" min="0" class="amt" id="i3" placeholder="0">
+          </div>
+          <div class="inc-row">
+            <label>Other Sources (Rent, Interest etc.)</label>
+            <input type="number" min="0" class="amt" id="i4" placeholder="0">
+          </div>
+
+          <div class="inc-total">
+            <span>Total Annual Family Income</span>
+            <input id="total" readonly placeholder="₹ 0">
+          </div>
+
+          <div class="words" id="words"></div>
+        </section>
+
+        <section>
+          <h2>5. Declaration & Signature</h2>
+
+          <div class="decl">
+            <p>I hereby declare that the information given above and in the enclosed
+            documents is true to the best of my knowledge and belief, and nothing has
+            been concealed therein.</p>
+            <p>I am well aware of the fact that, if the information given by me is
+            proved false / not true, I will be liable for action as per the law. Also,
+            if any benefits availed by me shall be summarily withdrawn.</p>
+          </div>
+
+          <div class="row two" style="margin-top:14px">
+            <div class="field">
+              <label>Date</label>
+              <input id="date" type="date" required>
+            </div>
+            <div class="field">
+              <label>Place</label>
+              <input id="place" placeholder="Place" required>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:14px">
+            <label>Signature Upload (image)</label>
+            <div class="sig-upload">
+              <label class="file-label" for="signatureFile">📎 Upload Signature Image</label>
+              <input id="signatureFile" class="file-input" type="file" accept="image/*">
+              <div id="sigPreviewWrap" class="sig-preview-wrap hidden">
+                <img id="sigPreview" alt="Signature preview">
+                <button type="button" id="removeSig" class="btn-remove">Remove</button>
+              </div>
+              <small class="hint">PNG / JPG • white background preferred</small>
+            </div>
+          </div>
+        </section>
+
+        <div class="actions">
+          <!-- Button updated to Download PDF -->
+          <button type="button" class="btn-primary" id="pdfBtn">📥 Save as PDF</button>
+          <button type="button" class="btn-ghost" id="resetBtn">↺ Reset Form</button>
+        </div>
+      </form>
+    </main>
+
+    <!-- ================= LIVE A4 PREVIEW ================= -->
+    <aside class="preview-panel">
+      <div class="preview-head no-print">
+        <h2>Live A4 Preview</h2>
+      </div>
+
+      <div class="a4-viewport" id="viewport">
+        <!-- This is the element that gets converted to PDF -->
+        <div class="a4-sheet" id="sheet">
+
+          <div class="a4-head">
+            <div class="a4-title">SELF DECLARATION</div>
+          </div>
+
+          <p>
+            I <span class="fill" data-bind="prefix"></span>
+            <span class="fill" data-bind="name"></span>
+            <span class="fill" data-bind="relation"></span> of Shri
+            <span class="fill" data-bind="guardian"></span> Age
+            <span class="fill" data-bind="age"></span> Years, Caste
+            <span class="fill" data-bind="category"></span>, Sub Caste
+            <span class="fill" data-bind="subcaste"></span>, Resident of village
+            <span class="fill" data-bind="village"></span>, PO:
+            <span class="fill" data-bind="po"></span>, PS
+            <span class="fill" data-bind="ps"></span>, Tahasil:
+            <span class="fill" data-bind="tahasil"></span>, District
+            <span class="fill" data-bind="district"></span>, State:
+            <span class="fill" data-bind="state"></span>, PIN:
+            <span class="fill" data-bind="pin"></span>
+          </p>
+
+          <p>
+            <strong>Annual Family Income Details Declaration:</strong><br>
+            I hereby declare that the total annual income of my family from all sources
+            during the financial year <span class="fill" data-bind="fy"></span> is
+            <span class="fill" data-bind="total"></span>
+            (Rupees <span class="fill" id="prevWordsFill"></span> only)
+            as per the details given below:
+          </p>
+
+          <table class="inc-table">
+            <thead>
+              <tr>
+                <th>Sl. No.</th>
+                <th>Source of Income</th>
+                <th>Annual Income Amount (in ₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Agriculture Land / Farming / Horticulture</td>
+                <td class="num" data-bind="i1"></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Salary / Wages / Remuneration / Pension</td>
+                <td class="num" data-bind="i2"></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Business / Trade / Commerce / Profession</td>
+                <td class="num" data-bind="i3"></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Other Sources (Rent, Interest, etc.)</td>
+                <td class="num" data-bind="i4"></td>
+              </tr>
+              <tr class="total">
+                <td></td>
+                <td>Total Annual Family Income:</td>
+                <td class="num" data-bind="total"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="decl-block">
+            <p>
+              I do hereby declare that, the information given above and in the enclosed
+              documents is true to the best of my knowledge and belief, and nothing has
+              been concealed therein.
+            </p>
+            <p>
+              I am well aware of the fact that, if the information given by me is proved
+              false / not true, I will be liable for action as per the law. Also, if any
+              benefits availed by me shall be summarily withdrawn.
+            </p>
+          </div>
+
+          <div class="footer">
+            <div class="footer-left">
+              <div>Date: <span class="fill" data-bind="date"></span></div>
+              <div>Place: <span class="fill" data-bind="place"></span></div>
+            </div>
+
+            <div class="footer-right">
+              <div class="sig-img-wrap">
+                <img id="prevSignature" alt="Signature" hidden>
+                <div id="prevSigPlaceholder" class="sig-placeholder">Signature</div>
+              </div>
+              <div class="sig-caption">Signature of the Candidate</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+
   </div>
- </fieldset>
+</div>
 
- <fieldset>
- <legend>Step 4: Print or save</legend>
- <div class="actions" style="margin-bottom:12px">
-  <button type="button" data-act="print">Print Document</button>
-  <button type="button" class="alt" data-act="pdf">Save as PDF</button>
-  <button type="button" class="ghost" data-act="clear">Clear Form</button>
- </div>
- </fieldset>
-</form>
-
-<section class="preview-col" aria-label="Document preview">
- <div class="preview-head">
-  <h2>Live A4 preview</h2>
-  <div class="actions">
-   <button type="button" data-act="print">Print Document</button>
-   <button type="button" class="alt" data-act="pdf">Save as PDF</button>
-   <button type="button" class="ghost" data-act="clear">Clear Form</button>
-  </div>
- </div>
- <div id="scaleWrap"><div id="sheet"></div></div>
-</section>
-</main>
-<div class="mbar"><button type="button" data-act="print">Print Document</button><button type="button" class="alt" data-act="pdf">Save as PDF</button></div>
-<div class="toast" id="toast" role="status"></div>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="overlay hidden">
+  <div class="spinner"></div>
+  <div>Generating PDF... Please wait.</div>
+</div>
 
 <script>
-(function(){
-"use strict";
-var $=function(id){return document.getElementById(id)};
-var TEXT=["name","relname","age","year","subcaste","village","po","ps","tahasil","district","state","pin","fy","words","place","hon","rel","caste","date"];
-var INC=["i1","i2","i3","i4"];
-var wordsTouched=false;
+const $ = id => document.getElementById(id);
+const state = { signature: '' };
 
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function val(id){return $(id).value.trim()}
-function fill(v,n){return '<span class="f">'+(v?'\u00a0'+esc(v)+'\u00a0':'\u00a0'.repeat(n))+'</span>'}
-function pick(opts,chosen){return opts.map(function(o){return o===chosen?'<b class="pick">'+o+'</b>':o}).join(' / ')}
-function num(id){var v=parseFloat($(id).value);return isFinite(v)&&v>0?v:0}
-function inr(n){return n.toLocaleString("en-IN",{maximumFractionDigits:2,minimumFractionDigits:(n%1?2:0)})}
+// Amount to words
+const ONES=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
+'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const TENS=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
 
-/* Indian-system number to words */
-var ONES=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
-var TENS=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
-function below100(n){return n<20?ONES[n]:TENS[Math.floor(n/10)]+(n%10?" "+ONES[n%10]:"")}
-function below1000(n){var h=Math.floor(n/100),r=n%100,s="";if(h)s=ONES[h]+" Hundred";if(r)s+=(s?" ":"")+below100(r);return s}
-function words(n){
- if(n===0)return"Zero";
- var parts=[],units=[[10000000,"Crore"],[100000,"Lakh"],[1000,"Thousand"]];
- units.forEach(function(u){if(n>=u[0]){var q=Math.floor(n/u[0]);n%=u[0];parts.push((q>=100?words(q):below100(q))+" "+u[1])}});
- if(n)parts.push(below1000(n));
- return parts.join(" ");
+function two(n){
+  return n < 20 ? ONES[n] : TENS[Math.floor(n/10)] + (n % 10 ? ' ' + ONES[n % 10] : '');
 }
-function amountWords(a){
- if(a<=0)return"";
- var r=Math.floor(a+1e-9),p=Math.round((a-r)*100);
- if(p===100){r+=1;p=0}
- var s=r?words(r):"";
- if(p)s+=(s?" and ":"")+below100(p)+" Paise";
- return s;
+function three(n){
+  let s = '';
+  if(n >= 100){
+    s += ONES[Math.floor(n/100)] + ' Hundred';
+    n %= 100;
+    if(n) s += ' ';
+  }
+  if(n) s += two(n);
+  return s;
+}
+function words(num){
+  num = Math.round(Number(num) || 0);
+  if(num <= 0) return 'Zero';
+  const out = [];
+  const cr = Math.floor(num / 10000000); num %= 10000000;
+  const la = Math.floor(num / 100000);   num %= 100000;
+  const th = Math.floor(num / 1000);     num %= 1000;
+  if(cr) out.push(words(cr) + ' Crore');
+  if(la) out.push(two(la) + ' Lakh');
+  if(th) out.push(two(th) + ' Thousand');
+  if(num) out.push(three(num));
+  return out.join(' ');
 }
 
-function total(){return Math.round(INC.reduce(function(t,id){return t+num(id)},0)*100)/100}
+function getVal(id){
+  const el = $(id);
+  return el ? el.value.trim() : '';
+}
+
+function formatDate(v){
+  if(!v) return '';
+  const parts = v.split('-');
+  if(parts.length !== 3) return v;
+  return parts[2] + '/' + parts[1] + '/' + parts[0];
+}
+
+function getTotal(){
+  return ['i1','i2','i3','i4'].reduce(
+    (sum, id) => sum + (parseFloat(getVal(id)) || 0), 0
+  );
+}
 
 function render(){
- var t=total(),anyInc=INC.some(function(id){return $(id).value!==""});
- $("totalShow").textContent="₹ "+inr(t);
- if(!wordsTouched)$("words").value=amountWords(t);
- var REQ=["name","relname","age","caste","village","po","ps","tahasil","district","state","pin","fy","date","place"];
- var done=REQ.filter(function(id){return val(id)!==""}).length+(anyInc?1:0),all=REQ.length+1;
- $("pfill").style.width=Math.round(done/all*100)+"%";
- $("ptext").textContent=done===all?"All details filled. You can print or save as PDF now.":done+" of "+all+" required details filled";
- $("ptext").parentNode.classList.toggle("done",done===all);
- var rows=["Agriculture Land / Farming / Horticulture","Salary / Wages / Remuneration / Pension","Business / Trade / Commerce / Profession","Other Sources (Rent, Interest, etc.)"];
- var d=val("date"),dd=d?d.split("-").reverse().join("/"):"";
- var h='<h1 class="d-title">SELF DECLARATION</h1>'+
- '<p>I '+pick(["Smt","Sri","Kumari"],$("hon").value)+' '+fill(val("name"),32)+
- ' '+pick(["Son","Daughter","Wife"],$("rel").value)+' of Shri '+fill(val("relname"),30)+
- ' Age '+fill(val("age"),8)+' Year '+fill(val("year"),10)+', Caste '+fill(val("caste"),12)+
- ' (SC/ST/OBC/SEBC/General), Sub Caste '+fill(val("subcaste"),16)+', Resident of village '+fill(val("village"),22)+
- ', PO: '+fill(val("po"),18)+', PS '+fill(val("ps"),18)+', Tahasil: '+fill(val("tahasil"),20)+
- ', District '+fill(val("district"),20)+', State: '+fill(val("state"),10)+', PIN: '+fill(val("pin"),10)+'</p>'+
- '<p><b>Annual Family Income Details Declaration:</b><br>I hereby declare that the total annual income of my family from all sources during the financial year '+
- fill(val("fy"),14)+' is ₹ '+fill(anyInc?inr(t):"",14)+' (Rupees '+fill(val("words"),34)+' only) as per the details given below:</p>'+
- '<table><thead><tr><th class="c">Sl. No.</th><th>Source of Income</th><th>Annual Income Amount (in ₹)</th></tr></thead><tbody>'+
- rows.map(function(r,i){var v=$(INC[i]).value;return'<tr><td class="c">'+(i+1)+'</td><td>'+r+'</td><td class="n">₹ '+(v!==""?inr(num(INC[i])):"")+'</td></tr>'}).join("")+
- '<tr><td colspan="2"><b>Total Annual Family Income:</b></td><td class="n"><b>₹ '+(anyInc?inr(t):"")+'</b></td></tr></tbody></table>'+
- '<p>do hereby declare that, the information given above and in the enclosed documents is true to the best of my knowledge and belief, and nothing has been concealed therein.</p>'+
- '<p>I am well aware of the fact that, if the information given by me is proved false/ not true, I will be liable for action as per the law. Also, if any benefits availed by me shall be summarily withdrawn.</p>'+
- '<div class="foot"><div>Date: '+fill(dd,16)+'<br>Place: '+fill(val("place"),16)+'</div><div>&nbsp;<br>Signature of the Candidate</div></div>';
- $("sheet").innerHTML=h;
- fit();
+  const data = {
+    prefix:   getVal('prefix'),
+    relation: getVal('relation'),
+    name:     getVal('name'),
+    guardian: getVal('guardian'),
+    age:      getVal('age'),
+    category: getVal('category'),
+    subcaste: getVal('subcaste'),
+    village:  getVal('village'),
+    po:       getVal('po'),
+    ps:       getVal('ps'),
+    tahasil:  getVal('tahasil'),
+    district: getVal('district'),
+    state:    getVal('state'),
+    pin:      getVal('pin'),
+    fy:       getVal('fy'),
+    date:     formatDate(getVal('date')),
+    place:    getVal('place')
+  };
+
+  document.querySelectorAll('[data-bind]').forEach(el => {
+    const key = el.dataset.bind;
+    if(Object.prototype.hasOwnProperty.call(data, key)){
+      el.textContent = data[key] || '';
+    }
+  });
+
+  ['i1','i2','i3','i4'].forEach(id => {
+    const val = parseFloat(getVal(id)) || 0;
+    const el = document.querySelector('[data-bind="' + id + '"]');
+    if(el) el.textContent = val ? '₹ ' + val.toLocaleString('en-IN') : '';
+  });
+
+  const total = getTotal();
+
+  document.querySelectorAll('[data-bind="total"]').forEach(el => {
+    el.textContent = total ? '₹ ' + total.toLocaleString('en-IN') : '';
+  });
+
+  const prevWordsFill = $('prevWordsFill');
+  if(prevWordsFill){
+    prevWordsFill.textContent = total ? words(total) : '';
+  }
+
+  const totalInput = $('total');
+  if(totalInput) totalInput.value = total ? '₹ ' + total.toLocaleString('en-IN') : '';
+
+  const formWords = $('words');
+  if(formWords) formWords.textContent = total ? 'Rupees ' + words(total) + ' only' : '';
+
+  const prevSig = $('prevSignature');
+  const prevPlaceholder = $('prevSigPlaceholder');
+  if(prevSig && prevPlaceholder){
+    if(state.signature){
+      prevSig.src = state.signature;
+      prevSig.hidden = false;
+      prevPlaceholder.hidden = true;
+    }else{
+      prevSig.hidden = true;
+      prevSig.removeAttribute('src');
+      prevPlaceholder.hidden = false;
+    }
+  }
 }
 
-function fit(){
- var wrap=$("scaleWrap"),sheet=$("sheet");
- var s=Math.min(1,wrap.clientWidth/sheet.offsetWidth);
- sheet.style.transform="scale("+s+")";
- wrap.style.height=(sheet.offsetHeight*s)+"px";
+function updateSignatureUI(){
+  const wrap = $('sigPreviewWrap');
+  const img  = $('sigPreview');
+  if(!wrap || !img) return;
+
+  if(state.signature){
+    img.src = state.signature;
+    wrap.classList.remove('hidden');
+  }else{
+    img.removeAttribute('src');
+    wrap.classList.add('hidden');
+  }
 }
 
-/* Validation */
-var RULES={
- name:function(v){return v?"":"Enter your full name."},
- relname:function(v){return v?"":"Enter the name."},
- age:function(v){var n=Number(v);return v&&n>=1&&n<=120&&Number.isInteger(n)?"":"Enter an age between 1 and 120."},
- caste:function(v){return v?"":"Select a caste."},
- village:function(v){return v?"":"Enter the village."},
- po:function(v){return v?"":"Enter the post office."},
- ps:function(v){return v?"":"Enter the police station."},
- tahasil:function(v){return v?"":"Enter the tahasil."},
- district:function(v){return v?"":"Enter the district."},
- state:function(v){return v?"":"Enter the state."},
- pin:function(v){return/^[1-9]\d{5}$/.test(v)?"":"PIN code must be 6 digits."},
- fy:function(v){var m=/^(\d{4})-(\d{2})$/.exec(v);return m&&(+m[1]+1)%100===+m[2]?"":"Use the format 2025-26."},
- words:function(v){return v?"":"Enter the amount in words."},
- date:function(v){return v?"":"Select a date."},
- place:function(v){return v?"":"Enter the place."}
-};
-INC.forEach(function(id){RULES[id]=function(v){return v===""||Number(v)>=0?"":"Enter 0 or a positive amount."}});
+function handleSignatureFile(file){
+  if(!file) return;
+  if(!file.type.startsWith('image/')){
+    alert('Kripya sirf image file upload karein.');
+    return;
+  }
 
-function check(id){
- var m=RULES[id]($(id).value.trim()),e=document.querySelector('[data-e="'+id+'"]');
- if(e)e.textContent=m;$(id).classList.toggle("bad",!!m);
- return !m;
-}
-function validateAll(){
- var first=null;
- Object.keys(RULES).forEach(function(id){if(!check(id)&&!first)first=id});
- if(total()<=0){ if(!first)first="i1"; document.querySelector('[data-e="i1"]').textContent="Enter at least one income amount (use 0 if there is none)."; }
- if(!first&&INC.every(function(id){return $(id).value===""})){first="i1"}
- if(first){$(first).focus();return false}
- return true;
-}
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 500;
+      const maxH = 250;
+      let w = img.width;
+      let h = img.height;
+      const ratio = Math.min(maxW / w, maxH / h, 1);
+      w = Math.round(w * ratio);
+      h = Math.round(h * ratio);
 
-/* Toast */
-var tt;function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(tt);tt=setTimeout(function(){t.style.display="none"},4500)}
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
 
-/* Actions */
-function printDoc(pdf){
- if(!validateAll()){toast("Please correct the highlighted fields before printing.");return}
- document.title="Self_Declaration_"+val("name").replace(/\s+/g,"_");
- if(pdf)toast("In the print dialog, set the destination to “Save as PDF”.");
- setTimeout(function(){window.print();document.title="Self Declaration"},pdf?700:50);
-}
-function clearForm(){
- if(!confirm("Clear all entered information?"))return;
- $("form").reset();$("state").value="Odisha";wordsTouched=false;
- document.querySelectorAll(".err").forEach(function(e){e.textContent=""});
- document.querySelectorAll(".bad").forEach(function(e){e.classList.remove("bad")});
- render();
+      state.signature = canvas.toDataURL('image/jpeg', 0.8); // compress
+      updateSignatureUI();
+      render();
+      save();
+      scheduleFit();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
-/* Events */
-TEXT.concat(INC).forEach(function(id){
- var el=$(id);
- el.addEventListener("input",function(){
-  if(id==="pin")el.value=el.value.replace(/\D/g,"").slice(0,6);
-  if(id==="words")wordsTouched=el.value.trim()!=="";
-  if(el.classList.contains("bad"))check(id);
+const FIELDS = [
+  'prefix','name','relation','guardian','age','category','subcaste',
+  'village','po','ps','tahasil','district','state','pin','fy',
+  'i1','i2','i3','i4','date','place'
+];
+
+function save(){
+  const fields = {};
+  FIELDS.forEach(id => {
+    if($(id)) fields[id] = $(id).value;
+  });
+
+  try{
+    localStorage.setItem('selfDeclDataV2', JSON.stringify({
+      fields: fields,
+      signature: state.signature || ''
+    }));
+  }catch(e){}
+}
+
+function load(){
+  try{
+    const raw = localStorage.getItem('selfDeclDataV2');
+    if(!raw) return;
+    const d = JSON.parse(raw);
+
+    if(d.fields){
+      FIELDS.forEach(id => {
+        if($(id) && d.fields[id] !== undefined){
+          $(id).value = d.fields[id];
+        }
+      });
+    }
+    if(d.signature) state.signature = d.signature;
+  }catch(e){}
+}
+
+let fitRaf;
+function scheduleFit(){
+  cancelAnimationFrame(fitRaf);
+  fitRaf = requestAnimationFrame(fitPreview);
+}
+
+function fitPreview(){
+  const viewport = $('viewport');
+  const sheet = $('sheet');
+  if(!viewport || !sheet) return;
+
+  const vw = viewport.clientWidth;
+  const sw = sheet.offsetWidth;
+  if(!vw || !sw) return;
+
+  const scale = Math.min(1, vw / sw);
+  sheet.style.transform = 'scale(' + scale + ')';
+  viewport.style.height = Math.ceil(sheet.offsetHeight * scale) + 'px';
+}
+
+// ==================== PDF GENERATION ====================
+function downloadPDF() {
+  // Form validation
+  if(!$('f').reportValidity()) return;
+
+  if(!state.signature){
+    alert('Kripya signature image upload karein.');
+    return;
+  }
+
+  if(getTotal() <= 0){
+    alert('Kripya kam se kam ek income source me amount daalein.');
+    return;
+  }
+
+  save(); // save to local storage before generating
+
+  // Show loading
+  $('loadingOverlay').classList.remove('hidden');
+  const btn = $('pdfBtn');
+  btn.disabled = true;
+
+  const element = $('sheet');
+  
+  // Temporarily remove scaling so html2canvas captures full resolution
+  const originalTransform = element.style.transform;
+  const originalPosition = element.style.position;
+  const viewportHeight = $('viewport').style.height;
+
+  element.style.transform = 'none';
+  element.style.position = 'relative';
+  element.style.margin = '0 auto';
+
+  // PDF Options
+  const opt = {
+    margin:       0,
+    filename:     'Self_Declaration.pdf',
+    image:        { type: 'jpeg', quality: 0.75 }, // Adjusts file size (approx 150-400kb)
+    html2canvas:  { 
+      scale: 2, // 2 is a good balance for resolution and size
+      useCORS: true,
+      letterRendering: true,
+      backgroundColor: '#ffffff'
+    },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Generate and Save
+  html2pdf().set(opt).from(element).save().then(() => {
+    // Restore UI
+    element.style.transform = originalTransform;
+    element.style.position = originalPosition;
+    element.style.margin = '';
+    $('viewport').style.height = viewportHeight;
+    
+    scheduleFit();
+    $('loadingOverlay').classList.add('hidden');
+    btn.disabled = false;
+  }).catch(err => {
+    console.error(err);
+    alert('PDF generate karne me error aayi. Kripya dobara koshish karein.');
+    
+    // Restore UI
+    element.style.transform = originalTransform;
+    element.style.position = originalPosition;
+    element.style.margin = '';
+    $('viewport').style.height = viewportHeight;
+
+    scheduleFit();
+    $('loadingOverlay').classList.add('hidden');
+    btn.disabled = false;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  load();
+
+  if(!$('date').value){
+    $('date').value = new Date().toISOString().slice(0, 10);
+  }
+  if(!$('state').value){
+    $('state').value = 'Odisha';
+  }
+
+  updateSignatureUI();
   render();
- });
- el.addEventListener("change",function(){render()});
- if(RULES[id])el.addEventListener("blur",function(){if(el.value!==""||el.classList.contains("bad"))check(id)});
+
+  document.querySelectorAll('#f input, #f select').forEach(el => {
+    el.addEventListener('input', () => {
+      render();
+      save();
+      scheduleFit();
+    });
+    el.addEventListener('change', () => {
+      render();
+      save();
+      scheduleFit();
+    });
+  });
+
+  $('signatureFile').addEventListener('change', e => {
+    handleSignatureFile(e.target.files[0]);
+  });
+
+  $('removeSig').addEventListener('click', () => {
+    state.signature = '';
+    $('signatureFile').value = '';
+    updateSignatureUI();
+    render();
+    save();
+    scheduleFit();
+  });
+
+  // Bind PDF button
+  $('pdfBtn').addEventListener('click', downloadPDF);
+
+  $('resetBtn').addEventListener('click', () => {
+    if(!confirm('Form ka pura data delete ho jayega. Aage badhein?')) return;
+    localStorage.removeItem('selfDeclDataV2');
+    state.signature = '';
+    $('f').reset();
+    $('state').value = 'Odisha';
+    $('date').value = new Date().toISOString().slice(0, 10);
+    $('signatureFile').value = '';
+    updateSignatureUI();
+    render();
+    scheduleFit();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  scheduleFit();
+  window.addEventListener('resize', scheduleFit);
+  if('ResizeObserver' in window){
+    new ResizeObserver(scheduleFit).observe($('sheet'));
+  }
+  const prevSig = $('prevSignature');
+  if(prevSig) prevSig.addEventListener('load', scheduleFit);
 });
-$("today").addEventListener("click",function(){var d=new Date(),z=function(n){return(n<10?"0":"")+n};$("date").value=d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate());check("date");render()});
-$("autoWords").addEventListener("click",function(){wordsTouched=false;render()});
-document.querySelectorAll("[data-act]").forEach(function(b){
- b.addEventListener("click",function(){var a=b.dataset.act;a==="print"?printDoc(false):a==="pdf"?printDoc(true):clearForm()});
-});
-window.addEventListener("resize",fit);
-window.addEventListener("beforeprint",function(){$("sheet").style.transform="none"});
-window.addEventListener("afterprint",fit);
-render();
-})();
 </script>
 </body>
 </html>
