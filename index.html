@@ -3,259 +3,446 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Self Declaration – Save as PDF & Signature Upload</title>
+<title>Free Self Declaration Form Maker (Caste, Income, Residence) - PDF Download</title>
+<meta name="description" content="Create and download Self Declaration form for Caste, Income, and Residence online. Upload signature, get instant PDF. 100% Free tool for government schemes and admissions.">
+<meta name="keywords" content="self declaration form, caste income certificate, residence declaration, online form maker, pdf download, affidavit format">
 
-<!-- Handwriting Font -->
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- PDF Generation Library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<style>
-:root{
-  --bg:#eef2f9; --card:#fff; --ink:#16202f; --muted:#66758c;
-  --line:#dbe2ec; --accent:#0b6bcb; --soft:#eef5ff;
-}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{
-  font-family:"Segoe UI",system-ui,-apple-system,"Noto Sans",Arial,sans-serif;
-  background:var(--bg); color:var(--ink); line-height:1.45;
-  padding:14px; -webkit-text-size-adjust:100%;
-}
-.hidden{display:none!important}
+<!-- ========================================== -->
+<!-- GOOGLE ADSENSE SCRIPT YAHAN PASTE KAREIN   -->
+<!-- ========================================== -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
-/* Layout */
-.app{max-width:1500px; margin:0 auto}
-.app-title{text-align:center; margin:0 0 14px}
-.app-title h1{margin:0 0 4px; font-size:1.2rem; letter-spacing:.4px}
-.app-title p{margin:0; font-size:.8rem; color:var(--muted)}
-.layout{
-  display:grid; gap:18px;
-  grid-template-columns:minmax(0,1fr) minmax(340px,560px);
+<style>
+/* ==========================================
+   RESET & VARIABLES
+========================================== */
+:root{
+  --bg-body:#f8fafc; 
+  --bg-card:#ffffff; 
+  --ink:#1e293b; 
+  --muted:#64748b;
+  --line:#e2e8f0; 
+  --primary:#2563eb; 
+  --primary-hover:#1d4ed8;
+  --soft:#eff6ff;
+  --font-ui:'Poppins', sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth; scroll-padding-top: 80px;}
+body{
+  font-family:var(--font-ui);
+  background:var(--bg-body); 
+  color:var(--ink); 
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{text-decoration:none; color:var(--primary);}
+a:hover{text-decoration:underline;}
+.hidden{display:none!important;}
+
+/* ==========================================
+   HEADER & NAVIGATION (Mobile Friendly)
+========================================== */
+header{
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  position:fixed; top:0; left:0; width:100%; z-index:1000;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.nav-container{
+  max-width:1300px; margin:0 auto; padding:15px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+  position:relative;
+}
+.logo{
+  font-size:1.4rem; font-weight:700; color:var(--primary);
+  display:flex; align-items:center; gap:8px;
+}
+.logo span{color:var(--ink);}
+
+/* Hamburger Menu */
+.menu-toggle {
+  display: none; background: none; border: none; cursor: pointer;
+  flex-direction: column; gap: 5px; padding: 5px;
+}
+.menu-toggle span {
+  display: block; width: 25px; height: 3px; background: var(--ink);
+  border-radius: 3px; transition: 0.3s;
+}
+.nav-links{
+  display:flex; gap:20px; font-size:0.9rem; font-weight:500; color:var(--muted);
+}
+.nav-links a{ color:var(--muted); text-decoration:none; }
+.nav-links a:hover{ color:var(--primary); }
+
+@media(max-width:850px){
+  .menu-toggle{ display: flex; }
+  .nav-links{
+    display: none; flex-direction: column; position: absolute;
+    top: 100%; left: 0; width: 100%; background: #fff;
+    padding: 20px; box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-links.active{ display: flex; }
+}
+
+/* ==========================================
+   MAIN LAYOUT & HERO
+========================================== */
+main{ padding-top: 70px; }
+.hero{
+  text-align:center; padding:50px 20px 30px;
+  max-width:800px; margin:0 auto;
+}
+.hero h1{
+  font-size:2.2rem; font-weight:700; color:var(--ink);
+  margin-bottom:15px; line-height:1.2;
+}
+.hero p{
+  font-size:1.05rem; color:var(--muted); margin-bottom:25px;
+}
+@media(max-width:600px){
+  .hero h1{font-size:1.8rem;}
+  .hero p{font-size:0.95rem;}
+}
+
+/* ==========================================
+   AD SLOTS
+========================================== */
+.ad-container{
+  max-width:1300px; margin:20px auto; padding:0 20px;
+  text-align:center; overflow: hidden;
+}
+.ad-box{
+  background:#f1f5f9; border:2px dashed #cbd5e1;
+  border-radius:10px; padding:20px 10px;
+  color:#64748b; font-size:0.85rem; font-weight:500;
+  display:flex; justify-content:center; align-items:center;
+  min-height:100px;
+}
+.ad-box-sidebar{
+  background:#f1f5f9; border:2px dashed #cbd5e1;
+  border-radius:10px; padding:30px 10px;
+  color:#64748b; font-size:0.85rem; font-weight:500;
+  display:flex; justify-content:center; align-items:center;
+  min-height:250px; margin-top:20px;
+}
+
+/* ==========================================
+   TOOL SECTION
+========================================== */
+.main-wrapper{
+  max-width:1300px; margin:0 auto; padding:20px;
+  display:grid; gap:25px;
+  grid-template-columns:minmax(0, 1fr) minmax(380px, 580px); 
   align-items:start;
 }
-@media(max-width:1000px){
-  .layout{grid-template-columns:1fr}
-  .preview-panel{position:static!important}
+@media(max-width:1050px){
+  .main-wrapper{grid-template-columns:1fr;}
+  .preview-panel{position:static!important;}
 }
 
-/* Form card */
+/* Form Card */
 .form-card{
-  background:var(--card); border-radius:14px;
-  box-shadow:0 8px 30px rgba(16,32,60,.10); overflow:hidden;
+  background:var(--bg-card); 
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05); 
+  overflow:hidden;
+  border:1px solid var(--line);
 }
-.form-card form{padding:18px}
-section{margin-bottom:20px}
-section h2{
-  font-size:.78rem; text-transform:uppercase; letter-spacing:.9px;
-  color:var(--accent); margin:0 0 10px; padding-bottom:6px;
-  border-bottom:2px solid #e8f0fb;
+.form-card form{padding:25px;}
+.form-header{
+  padding:20px 25px; background:var(--soft);
+  border-bottom:1px solid var(--line);
 }
-.row{display:grid; gap:12px}
-.row + .row{margin-top:12px}
-@media(min-width:560px){ .row.two{grid-template-columns:1fr 1fr} }
-.field{display:flex; flex-direction:column; gap:5px; min-width:0}
-.field label{font-size:.74rem; font-weight:600; color:var(--muted); letter-spacing:.2px}
+.form-header h2{font-size:1.1rem; color:var(--primary);}
+.form-header p{font-size:0.8rem; color:var(--muted);}
+
+section.tool-section{margin-bottom:25px;}
+section.tool-section h2{
+  font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;
+  color:var(--primary); margin:0 0 15px; padding-bottom:8px;
+  border-bottom:2px solid var(--soft); font-weight:600;
+}
+.row{display:grid; gap:15px;}
+.row + .row{margin-top:15px;}
+@media(min-width:600px){ .row.two{grid-template-columns:1fr 1fr;} }
+
+.field{display:flex; flex-direction:column; gap:6px;}
+.field label{font-size:0.8rem; font-weight:500; color:var(--ink);}
 input,select{
-  width:100%; padding:11px 12px; font-size:16px; font-family:inherit;
-  color:var(--ink); background:#fbfcfe; border:1px solid var(--line);
-  border-radius:9px; outline:none; transition:.15s;
+  width:100%; padding:12px 14px; font-size:15px; font-family:inherit;
+  color:var(--ink); background:#f8fafc; border:1px solid var(--line);
+  border-radius:10px; outline:none; transition:.2s;
 }
 select{
-  appearance:none; -webkit-appearance:none; padding-right:34px;
-  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath fill='%2366758c' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 12px center;
+  appearance:none; -webkit-appearance:none; padding-right:35px;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath fill='%2364748b' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 14px center;
 }
-input:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(11,107,203,.14); background:#fff}
-input::placeholder{color:#a9b4c5}
-input[readonly]{background:var(--soft); font-weight:700}
+input:focus,select:focus{border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,0.15); background:#fff;}
+input[readonly]{background:#f1f5f9; font-weight:600; cursor:not-allowed;}
 
-/* Income rows */
+/* Income Table in Form */
 .inc-row{
-  display:grid; grid-template-columns:1fr minmax(110px,140px);
-  gap:10px; align-items:center; padding:8px 0;
+  display:grid; grid-template-columns:1fr minmax(120px,150px);
+  gap:10px; align-items:center; padding:10px 0;
   border-bottom:1px dashed var(--line);
 }
-.inc-row label{font-size:.85rem}
-.inc-row input{text-align:right}
+.inc-row label{font-size:0.85rem; font-weight:500;}
+.inc-row input{text-align:right;}
 .inc-total{
-  display:grid; grid-template-columns:1fr minmax(110px,140px); gap:10px;
+  display:grid; grid-template-columns:1fr minmax(120px,150px); gap:10px;
   align-items:center; background:var(--soft); border-radius:10px;
-  padding:11px 12px; margin-top:10px; font-weight:700; font-size:.9rem;
+  padding:15px; margin-top:15px; font-weight:700; font-size:0.95rem;
 }
 .words{
-  margin-top:8px; font-size:.82rem; color:var(--accent);
-  background:#f3f8ff; border-left:3px solid var(--accent);
-  padding:8px 10px; border-radius:0 8px 8px 0;
+  margin-top:10px; font-size:0.85rem; color:var(--primary);
+  background:#eff6ff; border-left:4px solid var(--primary);
+  padding:10px 15px; border-radius:0 8px 8px 0; font-weight:500;
 }
-.words:empty{display:none}
+.words:empty{display:none;}
 
-/* Declaration text */
-.decl{
-  font-size:.86rem; color:#2b3446; background:#fafbfe;
-  border:1px solid var(--line); border-radius:10px; padding:12px 14px;
-}
-.decl p{margin:0 0 8px}
-.decl p:last-child{margin:0}
-
-/* Signature upload */
+/* Signature Upload */
 .sig-upload{
-  border:1px dashed var(--line); border-radius:10px;
-  padding:12px; background:#fbfcfe;
+  border:2px dashed var(--line); border-radius:10px;
+  padding:15px; background:#f8fafc; text-align:center;
 }
 .file-label{
-  display:inline-block; background:#eef5ff; color:var(--accent);
-  font-weight:700; font-size:.85rem; padding:9px 12px;
-  border-radius:8px; cursor:pointer; border:1px solid #d5e6ff;
+  display:inline-block; background:var(--soft); color:var(--primary);
+  font-weight:600; font-size:0.85rem; padding:10px 16px;
+  border-radius:8px; cursor:pointer; transition:0.2s;
 }
-.file-input{display:none}
-.sig-preview-wrap{display:flex; align-items:center; gap:10px; margin-top:10px}
-.sig-preview-wrap img{
-  max-height:56px; max-width:160px; border:1px solid var(--line);
-  border-radius:6px; background:#fff; padding:4px;
-}
-.btn-remove{
-  background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;
-  border-radius:8px; padding:6px 10px; font-size:.78rem;
-  font-weight:700; cursor:pointer;
-}
-small.hint{display:block; color:var(--muted); font-size:.72rem; margin-top:6px}
+.file-label:hover{background:#dbeafe;}
+.file-input{display:none;}
+.sig-preview-wrap{display:flex; justify-content:center; align-items:center; gap:15px; margin-top:15px;}
+.sig-preview-wrap img{max-height:60px; max-width:200px; border:1px solid var(--line); border-radius:6px; background:#fff; padding:5px;}
+.btn-remove{background:#fee2e2; color:#b91c1c; border:none; border-radius:6px; padding:8px 12px; font-size:0.8rem; font-weight:600; cursor:pointer;}
 
 /* Buttons */
-.actions{display:flex; gap:10px; padding:14px 18px 20px; flex-wrap:wrap}
+.actions{display:flex; gap:15px; padding:25px; background:#f8fafc; border-top:1px solid var(--line); flex-wrap:wrap;}
 button{
-  flex:1 1 140px; padding:13px 16px; font-size:.92rem; font-weight:700;
-  font-family:inherit; border-radius:10px; border:none; cursor:pointer;
-  transition:.15s;
+  flex:1 1 160px; padding:15px 20px; font-size:1rem; font-weight:600;
+  font-family:inherit; border-radius:10px; border:none; cursor:pointer; transition:.2s;
 }
-.btn-primary{background:var(--accent); color:#fff; box-shadow:0 4px 14px rgba(11,107,203,.28)}
-.btn-primary:active{transform:translateY(1px)}
-.btn-primary:disabled{background:#7baedb; cursor:not-allowed}
-.btn-ghost{background:#f1f4fa; color:#46566e}
-.btn-ghost:active{background:#e4eaf4}
+.btn-primary{background:var(--primary); color:#fff; box-shadow:0 4px 15px rgba(37,99,235,0.3);}
+.btn-primary:hover{background:var(--primary-hover); transform:translateY(-1px);}
+.btn-primary:disabled{background:#93c5fd; cursor:not-allowed; transform:none;}
+.btn-ghost{background:#fff; color:var(--muted); border:1px solid var(--line);}
+.btn-ghost:hover{background:#f1f5f9; color:var(--ink);}
 
-/* Preview panel */
+/* ==========================================
+   LIVE A4 PREVIEW PANEL
+========================================== */
 .preview-panel{
-  position:sticky; top:16px;
-  background:var(--card); border-radius:14px;
-  box-shadow:0 8px 30px rgba(16,32,60,.10);
-  padding:12px;
+  position:sticky; top:90px;
+  background:var(--bg-card); border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05); padding:20px;
+  border:1px solid var(--line);
 }
 .preview-head{
-  display:flex; justify-content:space-between; align-items:center;
-  gap:10px; margin-bottom:10px;
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;
 }
-.preview-head h2{
-  margin:0; font-size:.82rem; letter-spacing:.5px;
-  color:var(--accent); text-transform:uppercase;
-}
+.preview-head h2{font-size:0.95rem; font-weight:600; color:var(--ink); text-transform:uppercase; letter-spacing:0.5px;}
+.badge{background:#dcfce7; color:#166534; font-size:0.75rem; padding:4px 10px; border-radius:20px; font-weight:600;}
+
 .a4-viewport{
   position:relative; width:100%; overflow:hidden;
-  background:#f7f9fc; border:1px solid var(--line);
+  background:#e2e8f0; border:1px solid var(--line);
   border-radius:10px; min-height:200px;
 }
 
-/* A4 Sheet */
+/* A4 Sheet Styling */
 .a4-sheet{
   position:absolute; top:0; left:0;
   width:210mm; min-height:297mm;
-  padding:16mm 14mm;
+  padding:20mm 18mm;
   background:#fff; color:#000;
   font-family:"Times New Roman", Georgia, serif;
-  font-size:11.2pt; line-height:1.45;
+  font-size:13pt; 
+  line-height:1.8; 
   transform-origin:top left;
-  box-shadow:0 10px 30px rgba(0,0,0,.18);
-  /* Background explicitly set for PDF */
-  background-color: #ffffff; 
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);
 }
-.a4-head{text-align:center; margin-bottom:8mm}
-.a4-title{font-size:15pt; font-weight:bold; letter-spacing:1px}
-.a4-sheet p{margin:0 0 3mm; text-align:justify}
+.a4-head{text-align:center; margin-bottom:10mm;}
+.a4-title{font-size:18pt; font-weight:bold; text-decoration:underline; text-transform:uppercase;}
+.a4-sheet p{margin:0 0 6mm; text-align:justify;}
 
-/* Handwriting Typing Effect */
-.fill{
-  display:inline-block; min-width:18mm;
-  border-bottom:1px solid #000; padding:0 1.5mm;
-  line-height:1.2; vertical-align:bottom;
+/* Handwriting Blue Ink Style */
+.handwritten {
   font-family: 'Caveat', cursive;
-  font-size: 14pt;
-  color: #1a237e; /* Blue Ink */
+  color: #1a237e;
+  font-size: 19pt;
   font-weight: 600;
+  display: inline-block;
+  min-width: 30mm;
+  border-bottom: 1.5px solid #1a237e;
+  padding: 0 4px;
+  text-align: center;
+  line-height: 1.1;
+  vertical-align: bottom;
   letter-spacing: 0.5px;
 }
-#prevWordsFill{
-  min-width:60mm;
-  text-align: center;
-}
 
+/* Table */
 .inc-table{
-  width:100%; border-collapse:collapse; font-size:10.5pt;
-  margin:3mm 0 4mm;
+  width:100%; border-collapse:collapse; font-size:12pt; margin:5mm 0 8mm;
 }
 .inc-table th,.inc-table td{
-  border:1px solid #000; padding:2.2mm 2.5mm; vertical-align:top;
+  border:1px solid #000; padding:3.5mm 3mm; vertical-align:middle;
 }
-.inc-table th{background:#f2f2f2; font-weight:bold; text-align:left}
+.inc-table th{background:#f2f2f2; font-weight:bold; text-align:left;}
 .inc-table .num{
-  text-align:right; white-space:nowrap; width:34mm;
+  text-align:right; width:45mm;
   font-family: 'Caveat', cursive;
-  font-size: 14pt;
   color: #1a237e;
+  font-size: 18pt;
   font-weight: 600;
 }
-.inc-table tr.total td{font-weight:bold; background:#f7f7f7}
+.inc-table tr.total td{font-weight:bold; background:#f9f9f9;}
 
-.decl-block{margin-top:4mm}
-.decl-block p{margin-bottom:3mm; text-align:justify}
-.footer{
+.decl-block{margin-top:5mm;}
+.decl-block p{margin-bottom:5mm; text-align:justify; line-height: 1.8;}
+
+/* Footer (Date, Place, Signature) */
+.sig-footer{
   display:flex; justify-content:space-between; align-items:flex-end;
-  gap:10mm; margin-top:12mm;
+  gap:10mm; margin-top:15mm;
 }
-.footer-left{font-size:10.5pt; line-height:1.8}
-.footer-right{text-align:center}
+.sig-footer-left{font-size:13pt; line-height:2.5;}
+.sig-footer-right{text-align:center;}
 .sig-img-wrap{
-  width:55mm; height:22mm; border-bottom:1px solid #000;
-  display:flex; align-items:flex-end; justify-content:center;
-  padding:1mm;
+  width:70mm; height:25mm; border-bottom:1.5px solid #000;
+  display:flex; align-items:flex-end; justify-content:center; padding:2mm;
 }
-.sig-img-wrap img{max-width:100%; max-height:20mm; object-fit:contain; display:block}
-.sig-placeholder{font-size:8.5pt; color:#777; padding-bottom:1mm}
-.sig-caption{font-size:9.5pt; text-align:center; width:55mm; margin-top:1mm}
+.sig-img-wrap img{max-width:100%; max-height:22mm; object-fit:contain; display:block;}
+.sig-placeholder{font-size:10pt; color:#777; padding-bottom:2mm;}
+.sig-caption{font-size:12pt; text-align:center; width:70mm; margin-top:3mm;}
 
-/* Loading Overlay */
+/* ==========================================
+   CONTENT SECTIONS (SEO & Adsense)
+========================================== */
+.content-wrapper{
+  max-width:1300px; margin:40px auto; padding:0 20px;
+}
+.content-card{
+  background:#fff; border-radius:16px; padding:30px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.03); border:1px solid var(--line);
+  margin-bottom:30px;
+}
+.content-card h2{
+  font-size:1.5rem; color:var(--ink); margin-bottom:15px; border-bottom:2px solid var(--soft); padding-bottom:10px;
+}
+.content-card h3{
+  font-size:1.2rem; color:var(--ink); margin-top:20px; margin-bottom:10px;
+}
+.content-card p{
+  color:#475569; margin-bottom:15px; font-size:1rem; line-height:1.7;
+}
+.content-card ul {
+  margin-left: 20px; margin-bottom: 15px; color:#475569;
+}
+.content-card li { margin-bottom: 8px; }
+.faq-item { margin-bottom: 20px; }
+.faq-item strong { display: block; margin-bottom: 5px; font-size: 1.05rem; color: var(--ink); }
+
+/* ==========================================
+   FOOTER
+========================================== */
+footer{
+  background:#1e293b; color:#cbd5e1; padding:50px 20px 20px; margin-top:50px;
+}
+.footer-content{
+  max-width:1300px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:40px;
+}
+.footer-col h3{font-size:1.1rem; color:#fff; margin-bottom:15px;}
+.footer-col p{font-size:0.9rem; color:#94a3b8; margin-bottom:15px; line-height:1.6;}
+.footer-links{display:flex; flex-direction:column; gap:10px;}
+.footer-links a{font-size:0.9rem; color:#94a3b8; text-decoration:none;}
+.footer-links a:hover{color:#fff;}
+.footer-bottom{
+  max-width:1300px; margin:40px auto 0; padding-top:20px; border-top:1px solid #334155;
+  text-align:center; font-size:0.85rem; color:#94a3b8;
+}
+
+/* ==========================================
+   LOADING OVERLAY
+========================================== */
 .overlay {
   position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(255,255,255,0.8); z-index: 9999;
+  background: rgba(255,255,255,0.9); z-index: 9999;
   display: flex; justify-content: center; align-items: center;
-  flex-direction: column; gap: 10px; font-weight: bold; color: #0b6bcb;
+  flex-direction: column; gap: 15px; font-weight: 600; color: var(--primary);
+  backdrop-filter: blur(4px);
 }
 .spinner {
-  width: 40px; height: 40px; border: 4px solid #eef5ff;
-  border-top: 4px solid #0b6bcb; border-radius: 50%;
+  width: 50px; height: 50px; border: 5px solid #dbeafe;
+  border-top: 5px solid var(--primary); border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
 </style>
 </head>
 <body>
 
-<div class="app">
-  <div class="app-title no-print">
-    <h1>SELF DECLARATION – Save as PDF</h1>
-    <p>Fill the form • Live A4 preview • Download PDF (100KB - 500KB)</p>
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="nav-container">
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      Declare<span>Form</span>
+    </div>
+    
+    <button class="menu-toggle" id="mobile-menu-btn">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="nav-links" id="nav-links">
+      <a href="#tool">Create Form</a>
+      <a href="#how-to-use">How to Use</a>
+      <a href="#faq">FAQs</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <h1>Free Online Self Declaration Form Maker</h1>
+    <p>Generate official Caste, Income, and Residence declaration forms instantly. Type your details, upload a signature, and download a high-quality PDF (100KB - 500KB) for free.</p>
+  </section>
+
+  <!-- TOP AD BANNER -->
+  <div class="ad-container">
+    <div class="ad-box">
+      <!-- AdSense Ad Slot 1: Top Banner -->
+      Advertisement Space (728x90 or Responsive)
+    </div>
   </div>
 
-  <div class="layout">
-
-    <!-- ================= FORM ================= -->
-    <main class="form-card no-print">
+  <!-- ================= TOOL SECTION ================= -->
+  <div class="main-wrapper" id="tool">
+    
+    <!-- LEFT: FORM -->
+    <main class="form-card">
+      <div class="form-header">
+        <h2>Fill Declaration Details</h2>
+        <p>Enter details below to generate your PDF.</p>
+      </div>
+      
       <form id="f" autocomplete="on">
-
-        <section>
+        <section class="tool-section">
           <h2>1. Personal Details</h2>
           <div class="row two">
             <div class="field">
@@ -269,31 +456,21 @@ button{
               <input id="name" placeholder="Enter full name" required>
             </div>
           </div>
-
           <div class="row two">
             <div class="field">
-              <label>Relation</label>
-              <select id="relation">
-                <option>Son</option><option>Daughter</option><option>Wife</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Father / Husband's Name (Shri)</label>
+              <label>Guardian's Name (Shri)</label>
               <input id="guardian" placeholder="Father / Husband's name" required>
             </div>
-          </div>
-
-          <div class="row two">
             <div class="field">
-              <label>Age (Years)</label>
+              <label>Age (In Years)</label>
               <input id="age" type="number" min="1" max="120" placeholder="e.g. 28" required>
             </div>
           </div>
-        </section>
-
-        <section>
-          <h2>2. Caste Details</h2>
           <div class="row two">
+            <div class="field">
+              <label>Birth Year</label>
+              <input id="year" type="number" min="1900" max="2025" placeholder="e.g. 1995" required>
+            </div>
             <div class="field">
               <label>Caste Category</label>
               <select id="category" required>
@@ -302,15 +479,21 @@ button{
                 <option>OBC</option><option>SEBC</option><option>General</option>
               </select>
             </div>
+          </div>
+          <div class="row two">
             <div class="field">
               <label>Sub Caste</label>
               <input id="subcaste" placeholder="Sub caste" required>
             </div>
+            <div class="field">
+              <label>Financial Year</label>
+              <input id="fy" placeholder="e.g. 2025-26" required>
+            </div>
           </div>
         </section>
 
-        <section>
-          <h2>3. Residence / Address</h2>
+        <section class="tool-section">
+          <h2>2. Residence / Address</h2>
           <div class="row two">
             <div class="field">
               <label>Village</label>
@@ -337,28 +520,16 @@ button{
               <input id="district" placeholder="District" required>
             </div>
             <div class="field">
-              <label>State</label>
-              <input id="state" value="Odisha" required>
-            </div>
-          </div>
-          <div class="row two">
-            <div class="field">
               <label>PIN Code</label>
-              <input id="pin" type="text" inputmode="numeric" pattern="[0-9]{6}"
-                     maxlength="6" placeholder="6 digit PIN" required>
-            </div>
-            <div class="field">
-              <label>Financial Year</label>
-              <input id="fy" placeholder="e.g. 2025-26" required>
+              <input id="pin" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6 digit PIN" required>
             </div>
           </div>
         </section>
 
-        <section>
-          <h2>4. Annual Family Income</h2>
-
+        <section class="tool-section">
+          <h2>3. Annual Family Income</h2>
           <div class="inc-row">
-            <label>Agriculture / Farming / Horticulture</label>
+            <label>Agriculture Land / Farming</label>
             <input type="number" min="0" class="amt" id="i1" placeholder="0">
           </div>
           <div class="inc-row">
@@ -366,35 +537,23 @@ button{
             <input type="number" min="0" class="amt" id="i2" placeholder="0">
           </div>
           <div class="inc-row">
-            <label>Business / Trade / Profession</label>
+            <label>Business / Profession</label>
             <input type="number" min="0" class="amt" id="i3" placeholder="0">
           </div>
           <div class="inc-row">
-            <label>Other Sources (Rent, Interest etc.)</label>
+            <label>Other Sources (Rent, Interest)</label>
             <input type="number" min="0" class="amt" id="i4" placeholder="0">
           </div>
-
           <div class="inc-total">
-            <span>Total Annual Family Income</span>
+            <span>Total Annual Income</span>
             <input id="total" readonly placeholder="₹ 0">
           </div>
-
           <div class="words" id="words"></div>
         </section>
 
-        <section>
-          <h2>5. Declaration & Signature</h2>
-
-          <div class="decl">
-            <p>I hereby declare that the information given above and in the enclosed
-            documents is true to the best of my knowledge and belief, and nothing has
-            been concealed therein.</p>
-            <p>I am well aware of the fact that, if the information given by me is
-            proved false / not true, I will be liable for action as per the law. Also,
-            if any benefits availed by me shall be summarily withdrawn.</p>
-          </div>
-
-          <div class="row two" style="margin-top:14px">
+        <section class="tool-section">
+          <h2>4. Declaration & Signature</h2>
+          <div class="row two" style="margin-bottom:15px;">
             <div class="field">
               <label>Date</label>
               <input id="date" type="date" required>
@@ -404,67 +563,52 @@ button{
               <input id="place" placeholder="Place" required>
             </div>
           </div>
-
-          <div class="field" style="margin-top:14px">
-            <label>Signature Upload (image)</label>
+          <div class="field">
+            <label>Signature Upload (Image)</label>
             <div class="sig-upload">
-              <label class="file-label" for="signatureFile">📎 Upload Signature Image</label>
+              <label class="file-label" for="signatureFile">📎 Choose Signature Image</label>
               <input id="signatureFile" class="file-input" type="file" accept="image/*">
               <div id="sigPreviewWrap" class="sig-preview-wrap hidden">
                 <img id="sigPreview" alt="Signature preview">
                 <button type="button" id="removeSig" class="btn-remove">Remove</button>
               </div>
-              <small class="hint">PNG / JPG • white background preferred</small>
             </div>
           </div>
         </section>
-
-        <div class="actions">
-          <!-- Button updated to Download PDF -->
-          <button type="button" class="btn-primary" id="pdfBtn">📥 Save as PDF</button>
-          <button type="button" class="btn-ghost" id="resetBtn">↺ Reset Form</button>
-        </div>
       </form>
+
+      <div class="actions">
+        <button type="button" class="btn-primary" id="pdfBtn">📥 Save as PDF</button>
+        <button type="button" class="btn-ghost" id="resetBtn">↺ Reset Form</button>
+      </div>
     </main>
 
-    <!-- ================= LIVE A4 PREVIEW ================= -->
+    <!-- RIGHT: PREVIEW -->
     <aside class="preview-panel">
-      <div class="preview-head no-print">
+      <div class="preview-head">
         <h2>Live A4 Preview</h2>
+        <span class="badge">Auto-updating</span>
       </div>
 
       <div class="a4-viewport" id="viewport">
-        <!-- This is the element that gets converted to PDF -->
+        <!-- EXACT PDF FORMAT TARGET -->
         <div class="a4-sheet" id="sheet">
-
+          
           <div class="a4-head">
             <div class="a4-title">SELF DECLARATION</div>
           </div>
 
           <p>
-            I <span class="fill" data-bind="prefix"></span>
-            <span class="fill" data-bind="name"></span>
-            <span class="fill" data-bind="relation"></span> of Shri
-            <span class="fill" data-bind="guardian"></span> Age
-            <span class="fill" data-bind="age"></span> Years, Caste
-            <span class="fill" data-bind="category"></span>, Sub Caste
-            <span class="fill" data-bind="subcaste"></span>, Resident of village
-            <span class="fill" data-bind="village"></span>, PO:
-            <span class="fill" data-bind="po"></span>, PS
-            <span class="fill" data-bind="ps"></span>, Tahasil:
-            <span class="fill" data-bind="tahasil"></span>, District
-            <span class="fill" data-bind="district"></span>, State:
-            <span class="fill" data-bind="state"></span>, PIN:
-            <span class="fill" data-bind="pin"></span>
+            I <span class="handwritten" id="p_prefix"></span> <span class="handwritten" id="p_name"></span><br>
+            Son / Daughter / Wife of Shri <span class="handwritten" id="p_guardian"></span> Age <span class="handwritten" id="p_age"></span><br>
+            Year <span class="handwritten" id="p_year"></span>, Caste <span class="handwritten" id="p_caste"></span> (SC/ST/OBC/SEBC/General), Sub Caste <span class="handwritten" id="p_subcaste"></span>,<br>
+            Resident of village <span class="handwritten" id="p_village"></span>, PO: <span class="handwritten" id="p_po"></span>, PS <span class="handwritten" id="p_ps"></span>,<br>
+            Tahasil: <span class="handwritten" id="p_tahasil"></span>, District <span class="handwritten" id="p_district"></span>, State: Odisha, PIN: <span class="handwritten" id="p_pin"></span>
           </p>
 
           <p>
             <strong>Annual Family Income Details Declaration:</strong><br>
-            I hereby declare that the total annual income of my family from all sources
-            during the financial year <span class="fill" data-bind="fy"></span> is
-            <span class="fill" data-bind="total"></span>
-            (Rupees <span class="fill" id="prevWordsFill"></span> only)
-            as per the details given below:
+            I hereby declare that the total annual income of my family from all sources during the financial year <span class="handwritten" id="p_fy"></span> is <span class="handwritten" id="p_total"></span> (Rupees <span class="handwritten" id="p_words"></span> only) as per the details given below:
           </p>
 
           <table class="inc-table">
@@ -479,51 +623,42 @@ button{
               <tr>
                 <td>1</td>
                 <td>Agriculture Land / Farming / Horticulture</td>
-                <td class="num" data-bind="i1"></td>
+                <td class="num" id="p_i1"></td>
               </tr>
               <tr>
                 <td>2</td>
                 <td>Salary / Wages / Remuneration / Pension</td>
-                <td class="num" data-bind="i2"></td>
+                <td class="num" id="p_i2"></td>
               </tr>
               <tr>
                 <td>3</td>
                 <td>Business / Trade / Commerce / Profession</td>
-                <td class="num" data-bind="i3"></td>
+                <td class="num" id="p_i3"></td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>Other Sources (Rent, Interest, etc.)</td>
-                <td class="num" data-bind="i4"></td>
+                <td class="num" id="p_i4"></td>
               </tr>
               <tr class="total">
                 <td></td>
                 <td>Total Annual Family Income:</td>
-                <td class="num" data-bind="total"></td>
+                <td class="num" id="p_total_table"></td>
               </tr>
             </tbody>
           </table>
 
           <div class="decl-block">
-            <p>
-              I do hereby declare that, the information given above and in the enclosed
-              documents is true to the best of my knowledge and belief, and nothing has
-              been concealed therein.
-            </p>
-            <p>
-              I am well aware of the fact that, if the information given by me is proved
-              false / not true, I will be liable for action as per the law. Also, if any
-              benefits availed by me shall be summarily withdrawn.
-            </p>
+            <p>do hereby declare that, the information given above and in the enclosed documents is true to the best of my knowledge and belief, and nothing has been concealed therein.</p>
+            <p>I am well aware of the fact that, if the information given by me is proved false/ not true, I will be liable for action as per the law. Also, if any benefits availed by me shall be summarily withdrawn.</p>
           </div>
 
-          <div class="footer">
-            <div class="footer-left">
-              <div>Date: <span class="fill" data-bind="date"></span></div>
-              <div>Place: <span class="fill" data-bind="place"></span></div>
+          <div class="sig-footer">
+            <div class="sig-footer-left">
+              <div>Date: <span class="handwritten" id="p_date"></span></div>
+              <div>Place: <span class="handwritten" id="p_place"></span></div>
             </div>
-
-            <div class="footer-right">
+            <div class="sig-footer-right">
               <div class="sig-img-wrap">
                 <img id="prevSignature" alt="Signature" hidden>
                 <div id="prevSigPlaceholder" class="sig-placeholder">Signature</div>
@@ -534,36 +669,178 @@ button{
 
         </div>
       </div>
+
+      <!-- SIDEBAR AD -->
+      <div class="ad-box-sidebar">
+        <!-- AdSense Ad Slot 2: Sidebar -->
+        Advertisement Space (300x250 or Responsive)
+      </div>
     </aside>
 
   </div>
+
+  <!-- ================= CONTENT SECTIONS (For AdSense Approval) ================= -->
+  <div class="content-wrapper">
+    
+    <!-- HOW TO USE -->
+    <div class="content-card" id="how-to-use">
+      <h2>How to Use the Self Declaration Form Maker</h2>
+      <p>Creating a professional declaration form for caste, income, or residence has never been easier. Follow these simple steps to generate your PDF:</p>
+      <ul>
+        <li><strong>Step 1: Fill Your Details:</strong> Enter your name, guardian's name, age, and birth year in the "Personal Details" section.</li>
+        <li><strong>Step 2: Caste Information:</strong> Select your caste category (SC, ST, OBC, SEBC, General) and type your sub-caste.</li>
+        <li><strong>Step 3: Address Details:</strong> Fill in your village, post office, police station, district, and PIN code.</li>
+        <li><strong>Step 4: Income Information:</strong> Enter your family's annual income from various sources. The total and amount in words will be calculated automatically.</li>
+        <li><strong>Step 5: Upload Signature:</strong> Upload a clear image of your signature (PNG or JPG).</li>
+        <li><strong>Step 6: Download PDF:</strong> Review the live A4 preview and click "Save as PDF". Your file will download instantly!</li>
+      </ul>
+    </div>
+
+    <!-- WHAT IS THIS FORM -->
+    <div class="content-card">
+      <h2>What is a Self Declaration Form?</h2>
+      <p>A Self Declaration Form is a legally binding document where an individual declares certain facts about themselves. It is often required for government schemes, educational admissions, and official paperwork when a specific certificate (like an income or caste certificate) is not available or is pending.</p>
+      <h3>Common Uses:</h3>
+      <ul>
+        <li><strong>Income Declaration:</strong> To declare family income for scholarships or fee waivers.</li>
+        <li><strong>Caste Declaration:</strong> To declare one's caste category for reservation benefits.</li>
+        <li><strong>Residence Declaration:</strong> To provide proof of address for school admissions or government forms.</li>
+      </ul>
+      <p><em>Note: This tool generates a standard format. Always verify if the receiving authority requires a specific format or notarization.</em></p>
+    </div>
+
+    <!-- FAQ SECTION -->
+    <div class="content-card" id="faq">
+      <h2>Frequently Asked Questions (FAQs)</h2>
+      
+      <div class="faq-item">
+        <strong>1. Is this Self Declaration form tool free to use?</strong>
+        <p>Yes, our tool is 100% free. You can generate and download unlimited PDFs without any hidden charges.</p>
+      </div>
+      
+      <div class="faq-item">
+        <strong>2. What is the file size of the generated PDF?</strong>
+        <p>We have optimized our PDF generator to keep the file size between 100KB to 500KB, ensuring it's easy to share on WhatsApp or email.</p>
+      </div>
+      
+      <div class="faq-item">
+        <strong>3. Do I need to create an account to download the PDF?</strong>
+        <p>No account or login is required. Simply fill the form, upload your signature, and download the PDF directly.</p>
+      </div>
+      
+      <div class="faq-item">
+        <strong>4. Why is the text in blue handwriting style?</strong>
+        <p>The preview simulates a handwritten form to give it a personalized feel. The final PDF will also retain this styling.</p>
+      </div>
+      
+      <div class="faq-item">
+        <strong>5. Is my data safe?</strong>
+        <p>Absolutely. Your data is processed directly in your browser. We do not save or transmit your personal information to any server.</p>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-col" id="about">
+      <h3>About DeclareForm</h3>
+      <p>DeclareForm is a free online utility tool designed to help users quickly generate standard self-declaration forms for caste, income, and residence. Our mission is to simplify paperwork for everyone.</p>
+    </div>
+    <div class="footer-col" id="contact">
+      <h3>Contact Us</h3>
+      <p>Have questions or feedback? We'd love to hear from you.</p>
+      <p>Email: <a href="mailto:support@declareform.com" style="color:#fff;">support@declareform.com</a></p>
+    </div>
+    <div class="footer-col">
+      <h3>Quick Links</h3>
+      <div class="footer-links">
+        <a href="#tool">Create Form</a>
+        <a href="#how-to-use">How to Use</a>
+        <a href="#faq">FAQs</a>
+        <!-- AdSense Mandatory Pages -->
+        <a href="#" id="privacy-link">Privacy Policy</a>
+        <a href="#" id="terms-link">Terms & Conditions</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2025 DeclareForm. All rights reserved. Designed for utility and educational purposes.
+  </div>
+</footer>
+
+<!-- PRIVACY POLICY MODAL (For AdSense) -->
+<div id="privacy-modal" class="overlay hidden" style="background: rgba(0,0,0,0.6); padding: 20px;">
+  <div style="background: #fff; padding: 30px; border-radius: 12px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; color: #1e293b; text-align: left;">
+    <h2 style="margin-bottom: 15px; color: #2563eb;">Privacy Policy</h2>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;">Last updated: October 2025</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;">This Privacy Policy explains how DeclareForm ("we", "us", or "our") collects, uses, and protects your information when you use our website.</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>Data Processing:</strong> All data entered into the form (Name, Age, Income, etc.) is processed directly in your browser. We do not store, save, or transmit your personal data to any external servers.</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>Cookies & Ads:</strong> We may use cookies to enhance your experience. Third-party vendors, including Google AdSense, use cookies to serve ads based on your prior visits to our website or other websites.</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>Google AdSense:</strong> Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet. Users may opt out of personalized advertising by visiting Ads Settings.</p>
+    <button id="close-privacy" style="margin-top: 15px; padding: 10px 20px; background: #2563eb; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Close</button>
+  </div>
 </div>
 
-<!-- Loading Overlay -->
+<!-- TERMS MODAL (For AdSense) -->
+<div id="terms-modal" class="overlay hidden" style="background: rgba(0,0,0,0.6); padding: 20px;">
+  <div style="background: #fff; padding: 30px; border-radius: 12px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; color: #1e293b; text-align: left;">
+    <h2 style="margin-bottom: 15px; color: #2563eb;">Terms & Conditions</h2>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;">By using DeclareForm, you agree to the following terms:</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>1. Use of Service:</strong> This tool is provided "as is" for informational and utility purposes. We are not responsible for any legal issues arising from the use of the generated forms.</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>2. Accuracy:</strong> You are solely responsible for the accuracy of the information entered into the form.</p>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>3. Limitation of Liability:</strong> We shall not be liable for any direct, indirect, or consequential damages resulting from the use or inability to use our service.</p>
+    <button id="close-terms" style="margin-top: 15px; padding: 10px 20px; background: #2563eb; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Close</button>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
 <div id="loadingOverlay" class="overlay hidden">
   <div class="spinner"></div>
   <div>Generating PDF... Please wait.</div>
 </div>
 
 <script>
+/* ==========================================
+   UI TOGGLES (Mobile Menu & Modals)
+========================================== */
+const menuBtn = document.getElementById('mobile-menu-btn');
+const navLinks = document.getElementById('nav-links');
+menuBtn.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+});
+
+// Close menu on link click
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('active');
+  });
+});
+
+// Modals
+const privacyModal = document.getElementById('privacy-modal');
+const termsModal = document.getElementById('terms-modal');
+document.getElementById('privacy-link').addEventListener('click', (e) => { e.preventDefault(); privacyModal.classList.remove('hidden'); });
+document.getElementById('terms-link').addEventListener('click', (e) => { e.preventDefault(); termsModal.classList.remove('hidden'); });
+document.getElementById('close-privacy').addEventListener('click', () => privacyModal.classList.add('hidden'));
+document.getElementById('close-terms').addEventListener('click', () => termsModal.classList.add('hidden'));
+
+/* ==========================================
+   FORM & PDF LOGIC
+========================================== */
 const $ = id => document.getElementById(id);
 const state = { signature: '' };
 
-// Amount to words
-const ONES=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
-'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+// Number to Words
+const ONES=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
 const TENS=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-
-function two(n){
-  return n < 20 ? ONES[n] : TENS[Math.floor(n/10)] + (n % 10 ? ' ' + ONES[n % 10] : '');
-}
+function two(n){ return n < 20 ? ONES[n] : TENS[Math.floor(n/10)] + (n % 10 ? ' ' + ONES[n % 10] : ''); }
 function three(n){
   let s = '';
-  if(n >= 100){
-    s += ONES[Math.floor(n/100)] + ' Hundred';
-    n %= 100;
-    if(n) s += ' ';
-  }
+  if(n >= 100){ s += ONES[Math.floor(n/100)] + ' Hundred'; n %= 100; if(n) s += ' '; }
   if(n) s += two(n);
   return s;
 }
@@ -581,87 +858,57 @@ function words(num){
   return out.join(' ');
 }
 
-function getVal(id){
-  const el = $(id);
-  return el ? el.value.trim() : '';
-}
-
+function getVal(id){ const el = $(id); return el ? el.value.trim() : ''; }
 function formatDate(v){
   if(!v) return '';
   const parts = v.split('-');
   if(parts.length !== 3) return v;
   return parts[2] + '/' + parts[1] + '/' + parts[0];
 }
-
 function getTotal(){
-  return ['i1','i2','i3','i4'].reduce(
-    (sum, id) => sum + (parseFloat(getVal(id)) || 0), 0
-  );
+  return ['i1','i2','i3','i4'].reduce((sum, id) => sum + (parseFloat(getVal(id)) || 0), 0);
 }
 
 function render(){
-  const data = {
-    prefix:   getVal('prefix'),
-    relation: getVal('relation'),
-    name:     getVal('name'),
-    guardian: getVal('guardian'),
-    age:      getVal('age'),
-    category: getVal('category'),
-    subcaste: getVal('subcaste'),
-    village:  getVal('village'),
-    po:       getVal('po'),
-    ps:       getVal('ps'),
-    tahasil:  getVal('tahasil'),
-    district: getVal('district'),
-    state:    getVal('state'),
-    pin:      getVal('pin'),
-    fy:       getVal('fy'),
-    date:     formatDate(getVal('date')),
-    place:    getVal('place')
-  };
-
-  document.querySelectorAll('[data-bind]').forEach(el => {
-    const key = el.dataset.bind;
-    if(Object.prototype.hasOwnProperty.call(data, key)){
-      el.textContent = data[key] || '';
-    }
-  });
+  $('p_prefix').textContent = getVal('prefix');
+  $('p_name').textContent = getVal('name');
+  $('p_guardian').textContent = getVal('guardian');
+  $('p_age').textContent = getVal('age');
+  $('p_year').textContent = getVal('year');
+  $('p_caste').textContent = getVal('category');
+  $('p_subcaste').textContent = getVal('subcaste');
+  $('p_village').textContent = getVal('village');
+  $('p_po').textContent = getVal('po');
+  $('p_ps').textContent = getVal('ps');
+  $('p_tahasil').textContent = getVal('tahasil');
+  $('p_district').textContent = getVal('district');
+  $('p_pin').textContent = getVal('pin');
+  $('p_fy').textContent = getVal('fy');
+  $('p_date').textContent = formatDate(getVal('date'));
+  $('p_place').textContent = getVal('place');
 
   ['i1','i2','i3','i4'].forEach(id => {
     const val = parseFloat(getVal(id)) || 0;
-    const el = document.querySelector('[data-bind="' + id + '"]');
-    if(el) el.textContent = val ? '₹ ' + val.toLocaleString('en-IN') : '';
+    $('p_' + id).textContent = val ? '₹ ' + val.toLocaleString('en-IN') : '';
   });
 
   const total = getTotal();
-
-  document.querySelectorAll('[data-bind="total"]').forEach(el => {
-    el.textContent = total ? '₹ ' + total.toLocaleString('en-IN') : '';
-  });
-
-  const prevWordsFill = $('prevWordsFill');
-  if(prevWordsFill){
-    prevWordsFill.textContent = total ? words(total) : '';
-  }
-
-  const totalInput = $('total');
-  if(totalInput) totalInput.value = total ? '₹ ' + total.toLocaleString('en-IN') : '';
-
-  const formWords = $('words');
-  if(formWords) formWords.textContent = total ? 'Rupees ' + words(total) + ' only' : '';
+  $('p_total').textContent = total ? '₹ ' + total.toLocaleString('en-IN') : '';
+  $('p_total_table').textContent = total ? '₹ ' + total.toLocaleString('en-IN') : '';
+  $('p_words').textContent = total ? words(total) : '';
+  $('total').value = total ? '₹ ' + total.toLocaleString('en-IN') : '';
+  $('words').textContent = total ? 'Rupees ' + words(total) + ' only' : '';
 
   const prevSig = $('prevSignature');
   const prevPlaceholder = $('prevSigPlaceholder');
-  if(prevSig && prevPlaceholder){
-    if(state.signature){
-      prevSig.src = state.signature;
-      prevSig.hidden = false;
-      prevPlaceholder.hidden = true;
-    }else{
-      prevSig.hidden = true;
-      prevSig.removeAttribute('src');
-      prevPlaceholder.hidden = false;
-    }
+  if(state.signature){
+    prevSig.src = state.signature;
+    prevSig.hidden = false;
+    prevPlaceholder.hidden = true;
+  }else{
+    prevSig.hidden = true;
+    prevSig.removeAttribute('src');
+    prevPlaceholder.hidden = false;
   }
 }
 
@@ -669,7 +916,6 @@ function updateSignatureUI(){
   const wrap = $('sigPreviewWrap');
   const img  = $('sigPreview');
   if(!wrap || !img) return;
-
   if(state.signature){
     img.src = state.signature;
     wrap.classList.remove('hidden');
@@ -681,124 +927,67 @@ function updateSignatureUI(){
 
 function handleSignatureFile(file){
   if(!file) return;
-  if(!file.type.startsWith('image/')){
-    alert('Kripya sirf image file upload karein.');
-    return;
-  }
-
+  if(!file.type.startsWith('image/')){ alert('Kripya sirf image file upload karein.'); return; }
   const reader = new FileReader();
   reader.onload = e => {
     const img = new Image();
     img.onload = () => {
-      const maxW = 500;
-      const maxH = 250;
-      let w = img.width;
-      let h = img.height;
+      const maxW = 500; const maxH = 250;
+      let w = img.width; let h = img.height;
       const ratio = Math.min(maxW / w, maxH / h, 1);
-      w = Math.round(w * ratio);
-      h = Math.round(h * ratio);
-
+      w = Math.round(w * ratio); h = Math.round(h * ratio);
       const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
+      canvas.width = w; canvas.height = h;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-
-      state.signature = canvas.toDataURL('image/jpeg', 0.8); // compress
-      updateSignatureUI();
-      render();
-      save();
-      scheduleFit();
+      state.signature = canvas.toDataURL('image/jpeg', 0.8);
+      updateSignatureUI(); render(); save(); scheduleFit();
     };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-const FIELDS = [
-  'prefix','name','relation','guardian','age','category','subcaste',
-  'village','po','ps','tahasil','district','state','pin','fy',
-  'i1','i2','i3','i4','date','place'
-];
-
+const FIELDS = ['prefix','name','guardian','age','year','category','subcaste','village','po','ps','tahasil','district','pin','fy','i1','i2','i3','i4','date','place'];
 function save(){
   const fields = {};
-  FIELDS.forEach(id => {
-    if($(id)) fields[id] = $(id).value;
-  });
-
-  try{
-    localStorage.setItem('selfDeclDataV2', JSON.stringify({
-      fields: fields,
-      signature: state.signature || ''
-    }));
-  }catch(e){}
+  FIELDS.forEach(id => { if($(id)) fields[id] = $(id).value; });
+  try{ localStorage.setItem('declareFormData', JSON.stringify({ fields, signature: state.signature || '' })); }catch(e){}
 }
-
 function load(){
   try{
-    const raw = localStorage.getItem('selfDeclDataV2');
+    const raw = localStorage.getItem('declareFormData');
     if(!raw) return;
     const d = JSON.parse(raw);
-
-    if(d.fields){
-      FIELDS.forEach(id => {
-        if($(id) && d.fields[id] !== undefined){
-          $(id).value = d.fields[id];
-        }
-      });
-    }
+    if(d.fields) FIELDS.forEach(id => { if($(id) && d.fields[id] !== undefined) $(id).value = d.fields[id]; });
     if(d.signature) state.signature = d.signature;
   }catch(e){}
 }
 
 let fitRaf;
-function scheduleFit(){
-  cancelAnimationFrame(fitRaf);
-  fitRaf = requestAnimationFrame(fitPreview);
-}
-
+function scheduleFit(){ cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(fitPreview); }
 function fitPreview(){
-  const viewport = $('viewport');
-  const sheet = $('sheet');
+  const viewport = $('viewport'); const sheet = $('sheet');
   if(!viewport || !sheet) return;
-
-  const vw = viewport.clientWidth;
-  const sw = sheet.offsetWidth;
+  const vw = viewport.clientWidth; const sw = sheet.offsetWidth;
   if(!vw || !sw) return;
-
   const scale = Math.min(1, vw / sw);
   sheet.style.transform = 'scale(' + scale + ')';
   viewport.style.height = Math.ceil(sheet.offsetHeight * scale) + 'px';
 }
 
-// ==================== PDF GENERATION ====================
 function downloadPDF() {
-  // Form validation
   if(!$('f').reportValidity()) return;
+  if(!state.signature){ alert('Kripya signature image upload karein.'); return; }
+  if(getTotal() <= 0){ alert('Kripya kam se kam ek income source me amount daalein.'); return; }
 
-  if(!state.signature){
-    alert('Kripya signature image upload karein.');
-    return;
-  }
-
-  if(getTotal() <= 0){
-    alert('Kripya kam se kam ek income source me amount daalein.');
-    return;
-  }
-
-  save(); // save to local storage before generating
-
-  // Show loading
+  save(); 
   $('loadingOverlay').classList.remove('hidden');
   const btn = $('pdfBtn');
   btn.disabled = true;
 
   const element = $('sheet');
-  
-  // Temporarily remove scaling so html2canvas captures full resolution
   const originalTransform = element.style.transform;
   const originalPosition = element.style.position;
   const viewportHeight = $('viewport').style.height;
@@ -807,41 +996,29 @@ function downloadPDF() {
   element.style.position = 'relative';
   element.style.margin = '0 auto';
 
-  // PDF Options
   const opt = {
     margin:       0,
-    filename:     'Self_Declaration.pdf',
-    image:        { type: 'jpeg', quality: 0.75 }, // Adjusts file size (approx 150-400kb)
-    html2canvas:  { 
-      scale: 2, // 2 is a good balance for resolution and size
-      useCORS: true,
-      letterRendering: true,
-      backgroundColor: '#ffffff'
-    },
+    filename:     'Self_Declaration_Form.pdf',
+    image:        { type: 'jpeg', quality: 0.75 }, 
+    html2canvas:  { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#ffffff' },
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  // Generate and Save
   html2pdf().set(opt).from(element).save().then(() => {
-    // Restore UI
     element.style.transform = originalTransform;
     element.style.position = originalPosition;
     element.style.margin = '';
     $('viewport').style.height = viewportHeight;
-    
     scheduleFit();
     $('loadingOverlay').classList.add('hidden');
     btn.disabled = false;
   }).catch(err => {
     console.error(err);
     alert('PDF generate karne me error aayi. Kripya dobara koshish karein.');
-    
-    // Restore UI
     element.style.transform = originalTransform;
     element.style.position = originalPosition;
     element.style.margin = '';
     $('viewport').style.height = viewportHeight;
-
     scheduleFit();
     $('loadingOverlay').classList.add('hidden');
     btn.disabled = false;
@@ -850,57 +1027,34 @@ function downloadPDF() {
 
 document.addEventListener('DOMContentLoaded', () => {
   load();
-
-  if(!$('date').value){
-    $('date').value = new Date().toISOString().slice(0, 10);
-  }
-  if(!$('state').value){
-    $('state').value = 'Odisha';
-  }
+  if(!$('date').value) $('date').value = new Date().toISOString().slice(0, 10);
 
   updateSignatureUI();
   render();
 
   document.querySelectorAll('#f input, #f select').forEach(el => {
-    el.addEventListener('input', () => {
-      render();
-      save();
-      scheduleFit();
-    });
-    el.addEventListener('change', () => {
-      render();
-      save();
-      scheduleFit();
-    });
+    el.addEventListener('input', () => { render(); save(); scheduleFit(); });
+    el.addEventListener('change', () => { render(); save(); scheduleFit(); });
   });
 
-  $('signatureFile').addEventListener('change', e => {
-    handleSignatureFile(e.target.files[0]);
-  });
+  $('signatureFile').addEventListener('change', e => { handleSignatureFile(e.target.files[0]); });
 
   $('removeSig').addEventListener('click', () => {
     state.signature = '';
     $('signatureFile').value = '';
-    updateSignatureUI();
-    render();
-    save();
-    scheduleFit();
+    updateSignatureUI(); render(); save(); scheduleFit();
   });
 
-  // Bind PDF button
   $('pdfBtn').addEventListener('click', downloadPDF);
 
   $('resetBtn').addEventListener('click', () => {
     if(!confirm('Form ka pura data delete ho jayega. Aage badhein?')) return;
-    localStorage.removeItem('selfDeclDataV2');
+    localStorage.removeItem('declareFormData');
     state.signature = '';
     $('f').reset();
-    $('state').value = 'Odisha';
     $('date').value = new Date().toISOString().slice(0, 10);
     $('signatureFile').value = '';
-    updateSignatureUI();
-    render();
-    scheduleFit();
+    updateSignatureUI(); render(); scheduleFit();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
